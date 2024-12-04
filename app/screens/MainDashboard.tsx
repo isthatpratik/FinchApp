@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { createDrawerNavigator } from '@react-navigation/drawer'; // Import Drawer Navigator
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import * as Font from 'expo-font';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import ProfilePage from './Profile';
 
-const { height } = Dimensions.get('window'); // Get screen height
+const { height } = Dimensions.get('window');
 
-// Create the Drawer Navigator
 const Drawer = createDrawerNavigator();
 
 const MainDashboardScreen: React.FC = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  // Load custom fonts
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
@@ -22,9 +22,8 @@ const MainDashboardScreen: React.FC = () => {
       setFontLoaded(true);
     };
     loadFonts();
-  }, []); 
+  }, []);
 
-  // Show a loading state while fonts are being loaded
   if (!fontLoaded) {
     return (
       <View style={styles.loadingContainer}>
@@ -34,41 +33,28 @@ const MainDashboardScreen: React.FC = () => {
   }
 
   return (
-    <Drawer.Navigator initialRouteName="MainDashboard" screenOptions={
-      {headerShown: false}
-    }>
-      {/* Define the screens inside the Drawer Navigator */}
-      <Drawer.Screen name="MainDashboard" component={DashboardContent}/>
-      <Drawer.Screen name="Messages" component={MessagesDrawer} />
-      <Drawer.Screen name="Notifications" component={NotificationsDrawer} />
+    <Drawer.Navigator
+      initialRouteName="MainDashboard"
+      screenOptions={{ headerShown: false }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
+      <Drawer.Screen name="MainDashboard" component={DashboardContent} />
+      <Drawer.Screen name="Specials" component={SpecialsScreen} />
+      <Drawer.Screen name="Buy" component={BuyScreen} />
+      <Drawer.Screen name="Sell" component={SellScreen} />
+      <Drawer.Screen name="ProfilePage" component={ProfilePage} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen name="Help" component={HelpScreen} />
     </Drawer.Navigator>
   );
 };
 
-const MessagesDrawer = () => (
-  <View style={styles.drawerContainer}>
-    <Text style={styles.drawerText}>Messages</Text>
-    {/* Additional content for Messages drawer */}
-  </View>
-);
-
-const NotificationsDrawer = () => (
-  <View style={styles.drawerContainer}>
-    <Text style={styles.drawerText}>Notifications</Text>
-    {/* Additional content for Notifications drawer */}
-  </View>
-);
-
-// Create the main content of the Dashboard
 const DashboardContent = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
-      {/* Top Yellow Section */}
+      {/* Top Section */}
       <View style={styles.topSection}>
-        {/* Solid Yellow Background */}
         <View style={styles.yellowBackground} />
-
-        {/* Gradient at Bottom of Top Section */}
         <LinearGradient
           colors={['#FFEE00', '#00F0FF']}
           style={styles.bottomGradient}
@@ -76,12 +62,18 @@ const DashboardContent = ({ navigation }: any) => {
           end={{ x: 0, y: 1 }}
         />
 
-        {/* Header Icons */}
+        {/* Header */}
         <View style={styles.header}>
-          <View style={styles.headerIcons}>
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+            <Image
+              source={require('../assets/images/menu-icon.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+          <View style={styles.rightHeaderIcons}>
+            <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
               <Image
-                source={require('../assets/images/menu-icon.png')}
+                source={require('../assets/images/message-icon.png')}
                 style={styles.icon}
               />
             </TouchableOpacity>
@@ -91,16 +83,10 @@ const DashboardContent = ({ navigation }: any) => {
                 style={styles.icon}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
-              <Image
-                source={require('../assets/images/message-icon.png')}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
           </View>
         </View>
 
-        {/* Camera Icon with Speech Bubble */}
+        {/* Camera Section */}
         <View style={styles.cameraSection}>
           <Image
             source={require('../assets/images/camera-icon.png')}
@@ -111,8 +97,6 @@ const DashboardContent = ({ navigation }: any) => {
             style={styles.popupImage}
           />
         </View>
-
-        {/* Add Manually Section */}
         <Text style={styles.orText}>or</Text>
         <TouchableOpacity style={styles.addManuallyButton}>
           <Text style={styles.addManuallyText}>+ Add manually</Text>
@@ -128,22 +112,77 @@ const DashboardContent = ({ navigation }: any) => {
             source={require('../assets/images/empty-box.png')}
             style={styles.emptyBoxImage}
           />
-          <Text style={styles.emptyBoxText}>
-            Gee! Add a product to get started
-          </Text>
+          <Text style={styles.emptyBoxText}>Gee! Add a product to get started</Text>
         </View>
       </View>
     </View>
   );
 };
 
+const CustomDrawerContent = (props: any) => (
+  <DrawerContentScrollView {...props}>
+    <DrawerItem
+      label="Specials"
+      onPress={() => props.navigation.navigate('Specials')}
+      labelStyle={styles.drawerItemText}
+    />
+    <DrawerItem
+      label="Buy"
+      onPress={() => props.navigation.navigate('Buy')}
+      labelStyle={styles.drawerItemText}
+    />
+    <DrawerItem
+      label="Sell"
+      onPress={() => props.navigation.navigate('Sell')}
+      labelStyle={styles.drawerItemText}
+    />
+    <DrawerItem
+      label="Profile"
+      onPress={() => props.navigation.navigate('ProfilePage')}
+      labelStyle={styles.drawerItemText}
+    />
+    <DrawerItem
+      label="Settings"
+      onPress={() => props.navigation.navigate('Settings')}
+      labelStyle={styles.drawerItemText}
+    />
+    <DrawerItem
+      label="Help"
+      onPress={() => props.navigation.navigate('Help')}
+      labelStyle={styles.drawerItemText}
+    />
+  </DrawerContentScrollView>
+);
+
+const SpecialsScreen = () => (
+  <View style={styles.screenContainer}><Text style={styles.screenText}>Specials Screen</Text></View>
+);
+
+const BuyScreen = () => (
+  <View style={styles.screenContainer}><Text style={styles.screenText}>Buy Screen</Text></View>
+);
+
+const SellScreen = () => (
+  <View style={styles.screenContainer}><Text style={styles.screenText}>Sell Screen</Text></View>
+);
+
+const ProfileScreen = () => (
+  <View style={styles.screenContainer}><Text style={styles.screenText}>Profile Screen</Text></View>
+);
+
+const SettingsScreen = () => (
+  <View style={styles.screenContainer}><Text style={styles.screenText}>Settings Screen</Text></View>
+);
+
+const HelpScreen = () => (
+  <View style={styles.screenContainer}><Text style={styles.screenText}>Help Screen</Text></View>
+);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-
-  // Loading State
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -154,8 +193,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins-Medium',
   },
-
-  // Top Section
   topSection: {
     height: height * 0.6,
     paddingHorizontal: 32,
@@ -180,7 +217,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: '40%',
   },
-  headerIcons: {
+  rightHeaderIcons: {
     flexDirection: 'row',
     gap: 32,
   },
@@ -189,8 +226,6 @@ const styles = StyleSheet.create({
     height: 22,
     resizeMode: 'contain',
   },
-
-  // Camera Section
   cameraSection: {
     alignItems: 'center',
     marginVertical: 16,
@@ -220,8 +255,6 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: 'Poppins-Medium',
   },
-
-  // Bottom Gradient Section
   bottomGradient: {
     position: 'absolute',
     bottom: 0,
@@ -229,8 +262,6 @@ const styles = StyleSheet.create({
     right: 0,
     height: '5%',
   },
-
-  // Bottom Section
   bottomSection: {
     position: 'absolute',
     bottom: 0,
@@ -263,29 +294,36 @@ const styles = StyleSheet.create({
   },
   emptyBoxImage: {
     width: 60,
-    height: 80,
+    height: 60,
     resizeMode: 'contain',
-    marginBottom: 8,
   },
   emptyBoxText: {
+    marginTop: 16,
     fontSize: 14,
-    width: 160,
-    color: '#828282',
+    fontFamily: 'Poppins-Medium',
     textAlign: 'center',
+  },
+  drawerHeader: {
+    paddingVertical: 16,
+    backgroundColor: '#F0F0F0',
+    alignItems: 'center',
+  },
+  drawerHeaderText: {
+    fontSize: 18,
+    fontFamily: 'Poppins-SemiBold',
+  },
+  drawerItemText: {
+    fontSize: 16,
     fontFamily: 'Poppins-Medium',
   },
-
-  // Drawer styling
-  drawerContainer: {
+  screenContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
   },
-  drawerText: {
+  screenText: {
     fontSize: 20,
-    fontFamily: 'Poppins-Medium',
-    marginBottom: 20,
+    fontFamily: 'Poppins-SemiBold',
   },
 });
 
