@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen'; // Correct import
 import { useFonts } from 'expo-font';
-import TermsAndConditionsScreen from './screens/TermsAndConditionsScreen';
 import MainDashboardScreen from './screens/MainDashboard';
 import ProfilePage from './screens/Profile';
 import SignUpScreen from './screens/SignUp';
-import ProductWarrantyDetails from './screens/ProductWarrantDetails';
+import ProductWarrantyDetails from './screens/ProductWarrantyDetails';
+import TermsAndConditionsScreen from './screens/TermsAndConditionsScreen';
 
 // Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -31,9 +31,10 @@ export default function Index() {
   if (!fontsLoaded) {
     return null; // Render nothing until fonts are loaded
   }
-
+  
   return (
     <SafeAreaProvider>
+      {/* <TermsAndConditionsScreen /> */}
       {/* <MainDashboardScreen /> */}
       {/* <ProfilePage /> */}
       {/* <SignUpScreen /> */}
