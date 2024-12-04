@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation, DrawerActions } from '@react-navigation/native';  // UseDrawerActions
+import { createDrawerNavigator } from '@react-navigation/drawer'; // Import Drawer Navigator
 import * as Font from 'expo-font';
 
 const { height } = Dimensions.get('window'); // Get screen height
 
+// Create the Drawer Navigator
+const Drawer = createDrawerNavigator();
+
 const MainDashboardScreen: React.FC = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  // Use navigation hook for DrawerActions
-  const navigation = useNavigation();
-
-  // Load the Poppins font
+  // Load custom fonts
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
@@ -22,12 +22,45 @@ const MainDashboardScreen: React.FC = () => {
       setFontLoaded(true);
     };
     loadFonts();
-  }, []);
+  }, []); 
 
+  // Show a loading state while fonts are being loaded
   if (!fontLoaded) {
-    return <Text>Loading...</Text>; // Loading state while the font is being loaded
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
   }
 
+  return (
+    <Drawer.Navigator initialRouteName="MainDashboard" screenOptions={
+      {headerShown: false}
+    }>
+      {/* Define the screens inside the Drawer Navigator */}
+      <Drawer.Screen name="MainDashboard" component={DashboardContent}/>
+      <Drawer.Screen name="Messages" component={MessagesDrawer} />
+      <Drawer.Screen name="Notifications" component={NotificationsDrawer} />
+    </Drawer.Navigator>
+  );
+};
+
+const MessagesDrawer = () => (
+  <View style={styles.drawerContainer}>
+    <Text style={styles.drawerText}>Messages</Text>
+    {/* Additional content for Messages drawer */}
+  </View>
+);
+
+const NotificationsDrawer = () => (
+  <View style={styles.drawerContainer}>
+    <Text style={styles.drawerText}>Notifications</Text>
+    {/* Additional content for Notifications drawer */}
+  </View>
+);
+
+// Create the main content of the Dashboard
+const DashboardContent = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       {/* Top Yellow Section */}
@@ -35,9 +68,9 @@ const MainDashboardScreen: React.FC = () => {
         {/* Solid Yellow Background */}
         <View style={styles.yellowBackground} />
 
-        {/* New Gradient Rectangle at Bottom of Top Section */}
+        {/* Gradient at Bottom of Top Section */}
         <LinearGradient
-          colors={['#FFEE00', '#00F0FF']} // Yellow to a different shade of yellow
+          colors={['#FFEE00', '#00F0FF']}
           style={styles.bottomGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
@@ -45,25 +78,22 @@ const MainDashboardScreen: React.FC = () => {
 
         {/* Header Icons */}
         <View style={styles.header}>
-          {/* Menu Icon */}
-          <TouchableOpacity
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}  // Opening Drawer
-          >
-            <Image
-              source={require('../assets/images/menu-icon.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <View style={styles.rightIcons}>
-            <TouchableOpacity>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image
-                source={require('../assets/images/message-icon.png')}
+                source={require('../assets/images/menu-icon.png')}
                 style={styles.icon}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
               <Image
                 source={require('../assets/images/notification-bell.png')}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
+              <Image
+                source={require('../assets/images/message-icon.png')}
                 style={styles.icon}
               />
             </TouchableOpacity>
@@ -77,7 +107,7 @@ const MainDashboardScreen: React.FC = () => {
             style={styles.cameraIcon}
           />
           <Image
-            source={require('../assets/images/Popup.png')} // Replaced speech bubble with Popup.png
+            source={require('../assets/images/Popup.png')}
             style={styles.popupImage}
           />
         </View>
@@ -107,12 +137,22 @@ const MainDashboardScreen: React.FC = () => {
   );
 };
 
-export default MainDashboardScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+
+  // Loading State
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  loadingText: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium',
   },
 
   // Top Section
@@ -133,7 +173,6 @@ const styles = StyleSheet.create({
     width: 300,
     height: 100,
     resizeMode: 'contain',
-    margin: 0,
   },
   header: {
     flexDirection: 'row',
@@ -141,7 +180,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: '40%',
   },
-  rightIcons: {
+  headerIcons: {
     flexDirection: 'row',
     gap: 32,
   },
@@ -160,8 +199,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 30,
     resizeMode: 'contain',
-    backgroundColor: 'transparent',
-    marginBottom: 0,
   },
   orText: {
     textAlign: 'center',
@@ -199,7 +236,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: height * 0.38,
+    height: height * 0.35,
     backgroundColor: '#F5F5F5',
     padding: 16,
     elevation: 5,
@@ -237,4 +274,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Poppins-Medium',
   },
+
+  // Drawer styling
+  drawerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  drawerText: {
+    fontSize: 20,
+    fontFamily: 'Poppins-Medium',
+    marginBottom: 20,
+  },
 });
+
+export default MainDashboardScreen;

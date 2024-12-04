@@ -1,27 +1,50 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // For navigation
+import Ionicons from '@expo/vector-icons/Ionicons'; // Import Ionicons
 
-// Custom Checkbox component
-const CustomCheckBox = ({ value, onChange }: { value: boolean; onChange: (value: boolean) => void }) => {
-  return (
-    <TouchableOpacity onPress={() => onChange(!value)} style={styles.checkboxContainer}>
-      <View style={[styles.checkboxContainer, value && styles.checked]} />
-    </TouchableOpacity>
-  );
-};
+// Custom Checkbox Component
+const CustomCheckBox = ({ value, onChange }: { value: boolean; onChange: (value: boolean) => void }) => (
+  <TouchableOpacity
+    onPress={() => onChange(!value)}
+    accessible
+    accessibilityLabel={value ? 'Checkbox checked' : 'Checkbox unchecked'}
+    style={[styles.checkboxContainer, value && styles.checked]}
+  >
+    {value && <Text style={styles.checkboxCheck}>✓</Text>}
+  </TouchableOpacity>
+);
 
 const ProfilePage = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [rating, setRating] = useState(3); // Rating out of 5
+  const navigation = useNavigation<any>(); // Allow any route
+
+  const badges = [
+    { id: 1, title: 'Go Getter', image: require('../assets/images/go-getter-badge.png') },
+    { id: 2, title: 'Explorer', image: require('../assets/images/explorer-badge.png') },
+    { id: 3, title: 'Intern Badge', image: require('../assets/images/intern-badge.png') },
+    { id: 4, title: 'Deal Broker', image: require('../assets/images/upcoming-badge.png') },
+  ];
 
   return (
     <View style={styles.container}>
-      {/* Top Section (Green background) */}
+      {/* Top Section (Green Background) */}
       <View style={styles.topSection}>
-        {/* Profile Container */}
+        {/* Cross Button */}
+        <TouchableOpacity
+          style={styles.crossButton}
+          onPress={() => navigation.navigate('MainDashboard')}
+          accessible
+          accessibilityLabel="Close profile and go back to dashboard"
+        >
+          <Ionicons name="close" size={24} color="#000" />
+        </TouchableOpacity>
+
+        {/* Profile Info */}
         <View style={styles.profileContainer}>
           <Image
-            source={require('../assets/images/john-profile.png')} // Replace with your profile image
+            source={require('../assets/images/john-profile.png')}
             style={styles.profileImage}
           />
           <View style={styles.profileTextContainer}>
@@ -29,14 +52,14 @@ const ProfilePage = () => {
             <View style={styles.logoutContainer}>
               <Text style={styles.logoutText}>Log out</Text>
               <Image
-                source={require('../assets/images/logout.png')} // Logout logo image
+                source={require('../assets/images/logout.png')}
                 style={styles.logoutIcon}
               />
             </View>
           </View>
         </View>
 
-        {/* Rating Section with Container */}
+        {/* Rating Section */}
         <Text style={styles.sectionTitle}>Rating</Text>
         <View style={styles.ratingContainer}>
           <View style={styles.ratingBox}>
@@ -45,12 +68,14 @@ const ProfilePage = () => {
                 key={index}
                 onPress={() => setRating(index + 1)}
                 style={styles.starButton}
+                accessible
+                accessibilityLabel={`Rate ${index + 1} star${index === 0 ? '' : 's'}`}
               >
                 <Image
                   source={
                     index < rating
-                      ? require('../assets/images/star-filled.png') // Replace with your filled star icon
-                      : require('../assets/images/star-empty.png') // Replace with your empty star icon
+                      ? require('../assets/images/star-filled.png')
+                      : require('../assets/images/star-empty.png')
                   }
                   style={styles.starIcon}
                 />
@@ -61,69 +86,36 @@ const ProfilePage = () => {
 
         {/* Statistics Section */}
         <View style={styles.statsContainer}>
-          <View style={styles.statBox}>
-            <Text>Products</Text>
-            <Text style={styles.boldText}>1</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text>Current Value</Text>
-            <Text style={styles.boldText}>$1200</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text>Products Sold</Text>
-            <Text style={styles.boldText}>01</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text>Products Bought</Text>
-            <Text style={styles.boldText}>01</Text>
-          </View>
+          {[
+            { label: 'Products', value: 1 },
+            { label: 'Current Value', value: '$1200' },
+            { label: 'Products Sold', value: 1 },
+            { label: 'Products Bought', value: 1 },
+          ].map((stat, idx) => (
+            <View key={idx} style={styles.statBox}>
+              <Text>{stat.label}</Text>
+              <Text style={styles.boldText}>{stat.value}</Text>
+            </View>
+          ))}
         </View>
 
         {/* Monthly Report Opt-In */}
         <View style={styles.checkboxTextContainer}>
           <CustomCheckBox value={isChecked} onChange={setIsChecked} />
-          <Text style={styles.checkboxText}>
-            Opt to get a monthly asset report
-          </Text>
+          <Text style={styles.checkboxText}>Opt to get a monthly asset report</Text>
         </View>
       </View>
 
-      {/* Bottom Section (White background) */}
+      {/* Bottom Section (Badges) */}
       <View style={styles.bottomSection}>
         <Text style={styles.badgesTitle}>Badges</Text>
         <View style={styles.badgesContainer}>
-          {/* Badge 1 */}
-          <View style={styles.badge}>
-            <Image
-              source={require('../assets/images/go-getter-badge.png')} // Replace with your badge 1 image
-              style={styles.badgeImage}
-            />
-            <Text style={styles.badgeText}>Go Getter</Text>
-          </View>
-          {/* Badge 2 */}
-          <View style={styles.badge}>
-            <Image
-              source={require('../assets/images/explorer-badge.png')} // Replace with your badge 2 image
-              style={styles.badgeImage}
-            />
-            <Text style={styles.badgeText}>Explorer</Text>
-          </View>
-          {/* Badge 3 */}
-          <View style={styles.badge}>
-            <Image
-              source={require('../assets/images/intern-badge.png')} // Replace with your badge 3 image
-              style={styles.badgeImage}
-            />
-            <Text style={styles.badgeText}>Intern Badge</Text>
-          </View>
-          {/* Badge 4 */}
-          <View style={styles.badge}>
-            <Image
-              source={require('../assets/images/upcoming-badge.png')} // Replace with your badge 4 image
-              style={styles.badgeImage}
-            />
-            <Text style={styles.badgeText}>Deal Broker</Text>
-          </View>
+          {badges.map((badge) => (
+            <View key={badge.id} style={styles.badge}>
+              <Image source={badge.image} style={styles.badgeImage} />
+              <Text style={styles.badgeText}>{badge.title}</Text>
+            </View>
+          ))}
         </View>
       </View>
     </View>
@@ -133,21 +125,27 @@ const ProfilePage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    fontFamily: 'Poppins', // Default font set to Poppins
+    fontFamily: 'Poppins',
+  },
+  topSection: {
+    backgroundColor: '#8FFF00',
+    padding: 32,
+    paddingTop: 32, // Adjusted for cross button spacing
+    justifyContent: 'flex-start',
+  },
+  crossButton: {
+    position: 'absolute',
+    top: 60,
+    right: 26,
+    zIndex: 10,
   },
   boldText: {
     fontFamily: 'PoppinsBold',
-    fontSize: 20,
-  },
-  topSection: {
-    backgroundColor: '#8FFF00',  // Green background
-    padding: 32,
-    justifyContent: 'flex-start',
   },
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 20,
+    marginTop: 20,
   },
   profileImage: {
     width: 80,
@@ -161,7 +159,7 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 20,
-    fontWeight: '600', // SemiBold
+    fontWeight: '600',
     color: '#000',
     fontFamily: 'PoppinsBold',
   },
@@ -197,13 +195,6 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     padding: 12,
     flexDirection: 'row',
-    shadowColor:'#000000',
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0,
-    shadowRadius: 0,
     elevation: 4,
     borderWidth: 2,
   },
@@ -223,17 +214,9 @@ const styles = StyleSheet.create({
     width: '46%',
     backgroundColor: '#FFF',
     padding: 12,
-    gap: 5,
     borderWidth: 2,
     borderRadius: 2,
     marginBottom: 15,
-    shadowColor:'#000000',
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0,
-    shadowRadius: 0,
     elevation: 2,
     marginTop: 8,
   },
@@ -241,10 +224,15 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
-    borderRadius: 1,
+    borderRadius: 2,
     borderColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  checkboxCheck: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   checked: {
     backgroundColor: '#000',
@@ -260,10 +248,10 @@ const styles = StyleSheet.create({
     fontFamily: 'PoppinsMedium',
   },
   bottomSection: {
-    backgroundColor: '#FFF', // White background for the bottom section
+    backgroundColor: '#FFF',
     padding: 12,
     marginTop: -10,
-    borderTopWidth: 2, // Pulls the bottom section up slightly
+    borderTopWidth: 2,
   },
   badgesTitle: {
     fontSize: 18,
@@ -274,18 +262,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    flexGrow: 1,
   },
   badge: {
-    width: '50%',  // Each badge takes up half of the row
-    height: 140,   // Increased height for larger badges with text below
+    width: '50%',
+    height: 140,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent',  // Remove background color
   },
   badgeImage: {
-    width: 100,  // Increased size of badge images
-    height: 100, // Increased size of badge images
+    width: 100,
+    height: 100,
   },
   badgeText: {
     fontSize: 14,

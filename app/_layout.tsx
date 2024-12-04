@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import SplashScreen from '../app/screens/SplashScreenComponent'; // Import your splash screen
 
-export default function RootLayout() {
+const RootLayout = () => {
   const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
@@ -25,3 +25,5 @@ export default function RootLayout() {
     </Stack>
   );
 }
+
+export default RootLayout;
