@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "app/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["CAMERA"]
     },
     "web": {
       "bundler": "metro",
@@ -25,7 +26,15 @@
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-barcode-scanner"
+      [
+
+        "expo-camera",
+        {
+          "cameraPermission": "Allow FinchApp to access your camera",
+          "microphonePermission": "Allow FinchApp to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

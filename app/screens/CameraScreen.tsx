@@ -1,67 +1,141 @@
-// CameraScreen.tsx
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { Camera } from 'expo-camera';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import React, { useState, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { CameraView, CameraType, FlashMode, useCameraPermissions } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
+import Overlay from './Overlay';
 
-const { width, height } = Dimensions.get('window');
+const CameraScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+  const [cameraFacing, setCameraFacing] = useState<CameraType>('back');
+  const [permission, requestPermission] = useCameraPermissions();
+  const [flash, setFlash] = useState<FlashMode>('off');
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [isCameraReady, setIsCameraReady] = useState(false);
 
-const CameraScreen: React.FC = ({ navigation }: any) => {
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [scanned, setScanned] = useState(false);
+  const cameraRef = useRef<CameraView>(null);
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, []);
+  if (!permission) {
+    return <View />;
+  }
 
-  const handleBarcodeScanned = ({ type, data }: any) => {
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    // You can also navigate or handle the scanned barcode data here
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>We need your permission to access the camera</Text>
+        <TouchableOpacity onPress={requestPermission}>
+          <Text style={styles.buttonText}>Grant Permission</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  const handleCameraReady = () => {
+    setIsCameraReady(true);
   };
 
-  if (hasPermission === null) {
-    return <Text>Requesting camera permission...</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  const toggleFlash = () => {
+    setFlash((prev) => (prev === 'off' ? 'on' : prev === 'on' ? 'auto' : 'off'));
+  };
+
+  const handleImageSelect = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets?.[0]?.uri) {
+      console.log('Selected image URI:', result.assets[0].uri);
+      setPhotoUri(result.assets[0].uri);
+    }
+  };
+
+  const handleTakePhoto = async () => {
+    if (!isCameraReady) {
+      console.warn('Camera is not ready');
+      return;
+    }
+
+    if (cameraRef.current) {
+      try {
+        const photo = await cameraRef.current.takePictureAsync({
+          quality: 0.5,
+          base64: false,
+          exif: false,
+          skipProcessing: false,
+        });
+
+        if (photo?.uri) {
+          console.log('Photo URI:', photo.uri);
+          setPhotoUri(photo.uri);
+        } else {
+          console.warn('No photo was captured');
+        }
+      } catch (error) {
+        console.error('Error taking photo:', error);
+      }
+    } else {
+      console.warn('Camera reference is null');
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarcodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
-      <TouchableOpacity
-        style={styles.scanAgainButton}
-        onPress={() => setScanned(false)}
+      <CameraView
+        ref={cameraRef}
+        style={styles.camera}
+        facing={cameraFacing}
+        flash={flash}
+        onCameraReady={handleCameraReady}
       >
-        <Text style={styles.scanAgainText}>Tap to Scan Again</Text>
-      </TouchableOpacity>
+        <Overlay onGoBack={() => navigation.navigate('MainDashboard')} />
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.bottomButton} onPress={handleImageSelect}>
+            <Text style={styles.buttonText}>Gallery</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bottomButton} onPress={handleTakePhoto}>
+            <Text style={styles.buttonText}>Capture</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bottomButton} onPress={toggleFlash}>
+            <Text style={styles.buttonText}>Flash</Text>
+          </TouchableOpacity>
+        </View>
+      </CameraView>
+
+      {photoUri && (
+        <View style={styles.photoPreviewContainer}>
+          <Text style={styles.message}>Photo Preview:</Text>
+          <Image source={{ uri: photoUri }} style={styles.photoPreview} />
+        </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
+  container: { flex: 1 },
+  camera: { flex: 1 },
+  message: { textAlign: 'center', padding: 10 },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    width: '100%',
+    padding: 10,
+  },
+  bottomButton: { padding: 10 },
+  buttonText: { color: '#fff' },
+  photoPreviewContainer: {
+    marginTop: 20,
     alignItems: 'center',
   },
-  scanAgainButton: {
-    position: 'absolute',
-    bottom: 50,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    padding: 12,
-    borderRadius: 8,
-  },
-  scanAgainText: {
-    color: 'white',
-    fontSize: 18,
+  photoPreview: {
+    width: 200,
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 10,
   },
 });
 

@@ -1,23 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import * as Font from 'expo-font';
-import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import ProfilePage from './Profile';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Dimensions,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import * as Font from "expo-font";
+import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
+import ProfilePage from "./Profile";
+import { useNavigation } from "@react-navigation/native";
+import CameraScreen from "./CameraScreen";
+import AddProductDetails from "./AddProductDetailsScreen"; // Import your AddProductDetails screen here
+import AddProductDetailsScreen from "./AddProductDetailsScreen";
 
-const { height } = Dimensions.get('window');
+const { height } = Dimensions.get("window");
 
 const Drawer = createDrawerNavigator();
 
 const MainDashboardScreen: React.FC = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
-        'Poppins-Medium': require('../assets/fonts/Poppins-Medium.ttf'),
-        'Poppins-SemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
+        "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
+        "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
       });
       setFontLoaded(true);
     };
@@ -39,12 +51,14 @@ const MainDashboardScreen: React.FC = () => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="MainDashboard" component={DashboardContent} />
+      <Drawer.Screen name="AddProductDetailsScreen" component={AddProductDetailsScreen} />
       <Drawer.Screen name="Specials" component={SpecialsScreen} />
       <Drawer.Screen name="Buy" component={BuyScreen} />
       <Drawer.Screen name="Sell" component={SellScreen} />
       <Drawer.Screen name="ProfilePage" component={ProfilePage} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Help" component={HelpScreen} />
+      <Drawer.Screen name="CameraScreen" component={CameraScreen} />
     </Drawer.Navigator>
   );
 };
@@ -54,32 +68,34 @@ const DashboardContent = ({ navigation }: any) => {
     <View style={styles.container}>
       {/* Top Section */}
       <View style={styles.topSection}>
-        <View style={styles.yellowBackground} />
+        
         <LinearGradient
-          colors={['#FFEE00', '#00F0FF']}
+          colors={["#FFEE00", "#00F0FF"]}
           style={styles.bottomGradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
+          start={{ x: 0.5, y: 0.96 }}
+          // end={{ x: 0, y: 1 }}
         />
 
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <Image
-              source={require('../assets/images/menu-icon.png')}
+              source={require("../assets/images/menu-icon.png")}
               style={styles.icon}
             />
           </TouchableOpacity>
           <View style={styles.rightHeaderIcons}>
-            <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
+            <TouchableOpacity onPress={() => navigation.navigate("Messages")}>
               <Image
-                source={require('../assets/images/message-icon.png')}
+                source={require("../assets/images/message-icon.png")}
                 style={styles.icon}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Notifications")}
+            >
               <Image
-                source={require('../assets/images/notification-bell.png')}
+                source={require("../assets/images/notification-bell.png")}
                 style={styles.icon}
               />
             </TouchableOpacity>
@@ -88,17 +104,22 @@ const DashboardContent = ({ navigation }: any) => {
 
         {/* Camera Section */}
         <View style={styles.cameraSection}>
+          <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>
+            <Image
+              source={require("../assets/images/camera-icon.png")}
+              style={styles.cameraIcon}
+            />
+          </TouchableOpacity>
           <Image
-            source={require('../assets/images/camera-icon.png')}
-            style={styles.cameraIcon}
-          />
-          <Image
-            source={require('../assets/images/Popup.png')}
+            source={require("../assets/images/Popup.png")}
             style={styles.popupImage}
           />
         </View>
         <Text style={styles.orText}>or</Text>
-        <TouchableOpacity style={styles.addManuallyButton}>
+        <TouchableOpacity
+          style={styles.addManuallyButton}
+          onPress={() => navigation.navigate("AddProductDetailsScreen")} // Navigate to AddProductDetails
+        >
           <Text style={styles.addManuallyText}>+ Add manually</Text>
         </TouchableOpacity>
       </View>
@@ -109,10 +130,12 @@ const DashboardContent = ({ navigation }: any) => {
         <Text style={styles.productsTitle}>My Products</Text>
         <View style={styles.emptyBox}>
           <Image
-            source={require('../assets/images/empty-box.png')}
+            source={require("../assets/images/empty-box.png")}
             style={styles.emptyBoxImage}
           />
-          <Text style={styles.emptyBoxText}>Gee! Add a product to get started</Text>
+          <Text style={styles.emptyBoxText}>
+            Gee! Add a product to get started
+          </Text>
         </View>
       </View>
     </View>
@@ -123,198 +146,212 @@ const CustomDrawerContent = (props: any) => (
   <DrawerContentScrollView {...props}>
     <DrawerItem
       label="Specials"
-      onPress={() => props.navigation.navigate('Specials')}
+      onPress={() => props.navigation.navigate("Specials")}
       labelStyle={styles.drawerItemText}
     />
     <DrawerItem
       label="Buy"
-      onPress={() => props.navigation.navigate('Buy')}
+      onPress={() => props.navigation.navigate("Buy")}
       labelStyle={styles.drawerItemText}
     />
     <DrawerItem
       label="Sell"
-      onPress={() => props.navigation.navigate('Sell')}
+      onPress={() => props.navigation.navigate("Sell")}
       labelStyle={styles.drawerItemText}
     />
     <DrawerItem
       label="Profile"
-      onPress={() => props.navigation.navigate('ProfilePage')}
+      onPress={() => props.navigation.navigate("ProfilePage")}
       labelStyle={styles.drawerItemText}
     />
     <DrawerItem
       label="Settings"
-      onPress={() => props.navigation.navigate('Settings')}
+      onPress={() => props.navigation.navigate("Settings")}
       labelStyle={styles.drawerItemText}
     />
     <DrawerItem
       label="Help"
-      onPress={() => props.navigation.navigate('Help')}
+      onPress={() => props.navigation.navigate("Help")}
       labelStyle={styles.drawerItemText}
     />
   </DrawerContentScrollView>
 );
 
 const SpecialsScreen = () => (
-  <View style={styles.screenContainer}><Text style={styles.screenText}>Specials Screen</Text></View>
+  <View style={styles.screenContainer}>
+    <Text style={styles.screenText}>Specials Screen</Text>
+  </View>
 );
 
 const BuyScreen = () => (
-  <View style={styles.screenContainer}><Text style={styles.screenText}>Buy Screen</Text></View>
+  <View style={styles.screenContainer}>
+    <Text style={styles.screenText}>Buy Screen</Text>
+  </View>
 );
 
 const SellScreen = () => (
-  <View style={styles.screenContainer}><Text style={styles.screenText}>Sell Screen</Text></View>
+  <View style={styles.screenContainer}>
+    <Text style={styles.screenText}>Sell Screen</Text>
+  </View>
 );
 
 const ProfileScreen = () => (
-  <View style={styles.screenContainer}><Text style={styles.screenText}>Profile Screen</Text></View>
+  <View style={styles.screenContainer}>
+    <Text style={styles.screenText}>Profile Screen</Text>
+  </View>
 );
 
 const SettingsScreen = () => (
-  <View style={styles.screenContainer}><Text style={styles.screenText}>Settings Screen</Text></View>
+  <View style={styles.screenContainer}>
+    <Text style={styles.screenText}>Settings Screen</Text>
+  </View>
 );
 
 const HelpScreen = () => (
-  <View style={styles.screenContainer}><Text style={styles.screenText}>Help Screen</Text></View>
+  <View style={styles.screenContainer}>
+    <Text style={styles.screenText}>Help Screen</Text>
+  </View>
 );
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
   },
   loadingText: {
     fontSize: 16,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: "Poppins-Medium",
   },
   topSection: {
     height: height * 0.6,
     paddingHorizontal: 32,
     paddingTop: 42,
   },
-  yellowBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '120%',
-    backgroundColor: '#FFEE00',
-  },
+  // yellowBackground: {
+  //   position: "absolute",
+  //   top: 0,
+  //   left: 0,
+  //   right: 0,
+  //   height: "100%",
+  //   backgroundColor: "#FFEE00",
+  // },
   popupImage: {
     width: 300,
     height: 100,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '40%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "40%",
   },
   rightHeaderIcons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 32,
   },
   icon: {
     width: 22,
     height: 22,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   cameraSection: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 16,
   },
   cameraIcon: {
     width: 40,
     height: 30,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   orText: {
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 32,
     fontSize: 14,
-    color: '#000000',
-    fontFamily: 'Poppins-Medium',
+    color: "#000000",
+    fontFamily: "Poppins-Medium",
   },
   addManuallyButton: {
     marginTop: 8,
-    alignSelf: 'center',
+    alignSelf: "center",
     padding: 6,
     borderWidth: 1.5,
-    borderColor: '#000000',
+    borderColor: "#000000",
     borderRadius: 1,
   },
   addManuallyText: {
     fontSize: 14,
-    color: '#000000',
-    fontFamily: 'Poppins-Medium',
+    color: "#000000",
+    fontFamily: "Poppins-Medium",
   },
   bottomGradient: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    height: '5%',
+    top: 0,
+    height: "100%",
   },
   bottomSection: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    height: height * 0.35,
-    backgroundColor: '#F5F5F5',
+    height: height * 0.4,
+    backgroundColor: "#F5F5F5",
     padding: 16,
     elevation: 5,
     borderTopWidth: 2,
   },
   swipeIndicator: {
-    alignSelf: 'center',
+    alignSelf: "center",
     width: 40,
     height: 4,
-    backgroundColor: '#CCCCCC',
+    backgroundColor: "#CCCCCC",
     borderRadius: 2,
     marginBottom: 12,
   },
   productsTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 16,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
   },
   emptyBox: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 16,
   },
   emptyBoxImage: {
     width: 60,
     height: 60,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   emptyBoxText: {
     marginTop: 16,
-    fontSize: 14,
-    fontFamily: 'Poppins-Medium',
-    color: '#000000',
+    fontSize: 12,
+    fontFamily: "Poppins-Medium",
+    color: "#A9A9A9",
   },
   drawerItemText: {
-    fontFamily: 'Poppins-Medium',
     fontSize: 16,
+    fontFamily: "Poppins-Medium",
+    color: "#000000",
   },
   screenContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   screenText: {
     fontSize: 24,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: "Poppins-SemiBold",
   },
 });
 
