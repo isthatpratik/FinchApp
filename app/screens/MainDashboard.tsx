@@ -301,20 +301,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 14,
     fontFamily: 'Poppins-Medium',
-    textAlign: 'center',
-  },
-  drawerHeader: {
-    paddingVertical: 16,
-    backgroundColor: '#F0F0F0',
-    alignItems: 'center',
-  },
-  drawerHeaderText: {
-    fontSize: 18,
-    fontFamily: 'Poppins-SemiBold',
+    color: '#000000',
   },
   drawerItemText: {
-    fontSize: 16,
     fontFamily: 'Poppins-Medium',
+    fontSize: 16,
   },
   screenContainer: {
     flex: 1,
@@ -322,7 +313,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   screenText: {
-    fontSize: 20,
+    fontSize: 24,
     fontFamily: 'Poppins-SemiBold',
   },
 });
