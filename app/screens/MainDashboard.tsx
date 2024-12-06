@@ -12,10 +12,9 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import * as Font from "expo-font";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import ProfilePage from "./Profile";
-import { useNavigation } from "@react-navigation/native";
 import CameraScreen from "./CameraScreen";
-// Import your AddProductDetails screen here
 import AddProductDetailsScreen from "./AddProductDetailsScreen";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { height } = Dimensions.get("window");
 
@@ -23,7 +22,6 @@ const Drawer = createDrawerNavigator();
 
 const MainDashboardScreen: React.FC = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -65,18 +63,14 @@ const MainDashboardScreen: React.FC = () => {
 
 const DashboardContent = ({ navigation }: any) => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Top Section */}
       <View style={styles.topSection}>
-        
         <LinearGradient
           colors={["#FFEE00", "#00F0FF"]}
           style={styles.bottomGradient}
           start={{ x: 0.5, y: 0.96 }}
-          // end={{ x: 0, y: 1 }}
         />
-
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <Image
@@ -102,7 +96,6 @@ const DashboardContent = ({ navigation }: any) => {
           </View>
         </View>
 
-        {/* Camera Section */}
         <View style={styles.cameraSection}>
           <TouchableOpacity onPress={() => navigation.navigate("CameraScreen")}>
             <Image
@@ -118,7 +111,7 @@ const DashboardContent = ({ navigation }: any) => {
         <Text style={styles.orText}>or</Text>
         <TouchableOpacity
           style={styles.addManuallyButton}
-          onPress={() => navigation.navigate("AddProductDetailsScreen")} // Navigate to AddProductDetails
+          onPress={() => navigation.navigate("AddProductDetailsScreen")}
         >
           <Text style={styles.addManuallyText}>+ Add manually</Text>
         </TouchableOpacity>
@@ -138,7 +131,7 @@ const DashboardContent = ({ navigation }: any) => {
           </Text>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -229,22 +222,17 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Medium",
   },
   topSection: {
-    height: height * 0.6,
+    height: height * 0.6, // 70% of screen
     paddingHorizontal: 32,
     paddingTop: 42,
+    position: "relative", // To position the gradient inside the top section
   },
-  // yellowBackground: {
-  //   position: "absolute",
-  //   top: 0,
-  //   left: 0,
-  //   right: 0,
-  //   height: "100%",
-  //   backgroundColor: "#FFEE00",
-  // },
-  popupImage: {
-    width: 300,
-    height: 100,
-    resizeMode: "contain",
+  bottomGradient: {
+    position: "absolute", // Absolute to cover the whole top section
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   header: {
     flexDirection: "row",
@@ -264,6 +252,11 @@ const styles = StyleSheet.create({
   cameraSection: {
     alignItems: "center",
     marginVertical: 16,
+  },
+  popupImage: {
+    width: 300,
+    height: 100,
+    resizeMode: "contain",
   },
   cameraIcon: {
     width: 40,
@@ -290,23 +283,10 @@ const styles = StyleSheet.create({
     color: "#000000",
     fontFamily: "Poppins-Medium",
   },
-  bottomGradient: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    top: 0,
-    height: "100%",
-  },
   bottomSection: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: height * 0.4,
+    height: height * 0.4, // 30% of screen
     backgroundColor: "#F5F5F5",
     padding: 16,
-    elevation: 5,
     borderTopWidth: 2,
   },
   swipeIndicator: {
