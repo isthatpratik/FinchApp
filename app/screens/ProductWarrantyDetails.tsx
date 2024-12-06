@@ -13,50 +13,26 @@ import { LineChart } from "react-native-gifted-charts"; // Use LineChart compone
 const { width, height } = Dimensions.get("window");
 
 const ProductWarrantyDetails = () => {
-  // Dynamic data for the chart (example data)
+  // State for tracking paid and current values (example data)
   const [paidValue, setPaidValue] = useState(2000);
   const [currentValue, setCurrentValue] = useState(1100);
 
-  // Sample dynamic data for the chart
+  // Sample dynamic data for the LineChart (Product Value over time)
   const chartData = [
-    { value: 2000,
-      hideDataPoint: false,
-      dataPointLabelShiftY: -20,
-      dataPointLabelComponent: () => {
-        return (
-            <View
-            style={{
-                backgroundColor: 'transparent',
-                paddingHorizontal: 8,
-                paddingVertical: 5,
-                borderRadius: 4,
-            }}>
-            <Text style={{color: 'black'}}>$2000</Text>
-            </View>
-        );
-      }
-    },
+    { value: 2000, hideDataPoint: false, dataPointLabelShiftY: -20, dataPointLabelComponent: () => (
+      <View style={{ backgroundColor: 'transparent', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 4 }}>
+        <Text style={{ color: 'black' }}>$2000</Text>
+      </View>
+    ) },
     { value: 1500 },
     { value: 1800 },
     { value: 1400 },
     { value: 1200 },
-    { value: 1100,
-      hideDataPoint: false,
-      dataPointLabelShiftY: -30,
-      dataPointLabelComponent: () => {
-        return (
-            <View
-            style={{
-                backgroundColor: 'transparent',
-                paddingHorizontal: 8,
-                paddingVertical: 5,
-                borderRadius: 4,
-            }}>
-            <Text style={{color: 'black'}}>$1100</Text>
-            </View>
-        );
-      }
-     },
+    { value: 1100, hideDataPoint: false, dataPointLabelShiftY: -30, dataPointLabelComponent: () => (
+      <View style={{ backgroundColor: 'transparent', paddingHorizontal: 8, paddingVertical: 5, borderRadius: 4 }}>
+        <Text style={{ color: 'black' }}>$1100</Text>
+      </View>
+    ) },
   ];
 
   return (
@@ -64,7 +40,7 @@ const ProductWarrantyDetails = () => {
       {/* Top Section */}
       <View style={styles.topSection}>
         {/* Close Button */}
-        <TouchableOpacity style={styles.closeButton}>
+        <TouchableOpacity style={styles.closeButton} accessibilityLabel="Close" onPress={() => {/* Close action */}}>
           <Ionicons name="close" size={24} color="black" />
         </TouchableOpacity>
 
@@ -92,16 +68,18 @@ const ProductWarrantyDetails = () => {
               </View>
             </View>
           </View>
+
+          {/* Like and Dislike Options */}
           <View style={styles.likeContainer}>
             <Text style={styles.likeText}>Like this product?</Text>
             <View style={styles.likeIcons}>
-              <TouchableOpacity>
+              <TouchableOpacity accessibilityLabel="Like">
                 <Image
                   source={require('../assets/images/icons/like.png')}
                   style={styles.icon}
                 />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.dislikeIcon}>
+              <TouchableOpacity style={styles.dislikeIcon} accessibilityLabel="Dislike">
                 <Image
                   source={require('../assets/images/icons/dislike.png')}
                   style={styles.icon}
@@ -111,17 +89,15 @@ const ProductWarrantyDetails = () => {
           </View>
         </View>
 
-        {/* Graph */}
+        {/* Graph: LineChart showing value trend */}
         <View style={styles.graphContainer}>
-
-          {/* Curved AreaChart Component */}
           <LineChart
             areaChart
             curved
             data={chartData}
-            width={width} // Chart width
-            height={150} // Chart height
-            color="#000" // Line color (black)
+            width={width} // Full width for the chart
+            height={150} // Set height for the chart
+            color="#000" // Black line color
             startFillColor="#FFEE00"
             endFillColor="#FFEE00"
             startOpacity={1}
@@ -132,18 +108,19 @@ const ProductWarrantyDetails = () => {
             hideRules
             hideAxesAndRules
           />
-
           <Text style={styles.graphCenterText}>Valuation Trend</Text>
         </View>
       </View>
 
       {/* Bottom Section */}
       <View style={styles.bottomSection}>
+        {/* Card Row 1 */}
         <View style={styles.cardRow}>
           <TouchableOpacity style={styles.card}>
             <Image
               source={require('../assets/images/icons/warranty.png')}
               style={styles.icon}
+              accessibilityLabel="Extend warranty"
             />
             <Text style={styles.cardText}>Extend Warranty</Text>
           </TouchableOpacity>
@@ -151,15 +128,19 @@ const ProductWarrantyDetails = () => {
             <Image
               source={require('../assets/images/icons/sell.png')}
               style={styles.icon}
+              accessibilityLabel="Sell product"
             />
             <Text style={styles.cardText}>Sell this Product</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Card Row 2 */}
         <View style={styles.cardRow}>
           <TouchableOpacity style={styles.card}>
             <Image
               source={require('../assets/images/icons/receipt.png')}
               style={styles.icon}
+              accessibilityLabel="View receipt"
             />
             <Text style={styles.cardText}>View Receipt</Text>
           </TouchableOpacity>
@@ -167,11 +148,14 @@ const ProductWarrantyDetails = () => {
             <Image
               source={require('../assets/images/icons/repair.png')}
               style={styles.icon}
+              accessibilityLabel="Repairs & Service"
             />
             <Text style={styles.cardText}>Repairs & Service</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.deleteButton}>
+
+        {/* Delete Button */}
+        <TouchableOpacity style={styles.deleteButton} accessibilityLabel="Delete product">
           <Image
             source={require('../assets/images/icons/delete.png')}
             style={styles.icon}
@@ -183,6 +167,7 @@ const ProductWarrantyDetails = () => {
   );
 };
 
+// Styles with dynamic scaling based on screen size
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -275,7 +260,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     width: '100%',
   },
-  
   graphCenterText: {
     fontSize: 14,
     fontWeight: "bold",
@@ -318,17 +302,6 @@ const styles = StyleSheet.create({
   icon: {
     width: 24,
     height: 24,
-  },
-  squareDot: {
-    width: 8,
-    height: 8,
-    backgroundColor: "#000",
-    borderRadius: 2,
-    position: "absolute",
-  },
-  chartStyle: {
-    borderRadius: 8,
-    marginTop: 20,
   },
 });
 

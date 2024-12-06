@@ -1,12 +1,12 @@
-import React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createStackNavigator } from '@react-navigation/stack';
-import TermsAndConditionsScreen from '../screens/TermsAndConditionsScreen';
-import MainDashboardScreen from '../screens/MainDashboard';
-import ProfilePage from '../screens/Profile';
-import CameraScreen from '../screens/CameraScreen';
-import AddProductDetailsScreen from '../screens/AddProductDetailsScreen';
-import AdditionalDetailsScreen from '../screens/AdditionalDetailsScreen';
+import React from "react";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createStackNavigator } from "@react-navigation/stack";
+import TermsAndConditionsScreen from "../screens/TermsAndConditionsScreen";
+import MainDashboardScreen from "../screens/MainDashboard";
+import ProfilePage from "../screens/Profile";
+import CameraScreen from "../screens/CameraScreen";
+import AddProductDetailsScreen from "../screens/AddProductDetailsScreen";
+import AdditionalDetailsScreen from "../screens/AdditionalDetailsScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();

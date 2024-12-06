@@ -69,7 +69,7 @@ const DashboardContent = ({ navigation }: any) => {
         <LinearGradient
           colors={["#FFEE00", "#00F0FF"]}
           style={styles.bottomGradient}
-          start={{ x: 0.5, y: 0.96 }}
+          start={{ x: 0.5, y: 0.985 }}
         />
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.openDrawer()}>
@@ -316,6 +316,8 @@ const styles = StyleSheet.create({
   emptyBoxText: {
     marginTop: 16,
     fontSize: 12,
+    width: 120,
+    textAlign: 'center',
     fontFamily: "Poppins-Medium",
     color: "#A9A9A9",
   },

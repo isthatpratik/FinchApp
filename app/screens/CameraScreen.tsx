@@ -10,13 +10,16 @@ const CameraScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [flash, setFlash] = useState<FlashMode>('off');
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [isCameraReady, setIsCameraReady] = useState(false);
+  const [isTakingPhoto, setIsTakingPhoto] = useState(false); // Added state to handle photo taking process
 
   const cameraRef = useRef<CameraView>(null);
 
+  // If permission is not granted, render the permission request UI
   if (!permission) {
     return <View />;
   }
 
+  // Check for permission, show request UI if not granted
   if (!permission.granted) {
     return (
       <View style={styles.container}>
@@ -50,10 +53,12 @@ const CameraScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   };
 
   const handleTakePhoto = async () => {
-    if (!isCameraReady) {
-      console.warn('Camera is not ready');
+    if (!isCameraReady || isTakingPhoto) {
+      console.warn('Camera is not ready or photo is already being taken');
       return;
     }
+
+    setIsTakingPhoto(true); // Set state to true while taking a photo
 
     if (cameraRef.current) {
       try {
@@ -72,6 +77,8 @@ const CameraScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         }
       } catch (error) {
         console.error('Error taking photo:', error);
+      } finally {
+        setIsTakingPhoto(false); // Reset state once the photo is taken
       }
     } else {
       console.warn('Camera reference is null');
@@ -93,8 +100,12 @@ const CameraScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           <TouchableOpacity style={styles.bottomButton} onPress={handleImageSelect}>
             <Text style={styles.buttonText}>Gallery</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomButton} onPress={handleTakePhoto}>
-            <Text style={styles.buttonText}>Capture</Text>
+          <TouchableOpacity
+            style={[styles.bottomButton, isTakingPhoto && styles.disabledButton]} // Disable while taking photo
+            onPress={handleTakePhoto}
+            disabled={isTakingPhoto} // Disable button while taking photo
+          >
+            <Text style={styles.buttonText}>{isTakingPhoto ? 'Taking Photo...' : 'Capture'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.bottomButton} onPress={toggleFlash}>
             <Text style={styles.buttonText}>Flash</Text>
@@ -102,12 +113,12 @@ const CameraScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         </View>
       </CameraView>
 
-      {photoUri && (
+      {photoUri ? (
         <View style={styles.photoPreviewContainer}>
           <Text style={styles.message}>Photo Preview:</Text>
           <Image source={{ uri: photoUri }} style={styles.photoPreview} />
         </View>
-      )}
+      ) : null}
     </View>
   );
 };
@@ -127,6 +138,9 @@ const styles = StyleSheet.create({
   },
   bottomButton: { padding: 10 },
   buttonText: { color: '#fff' },
+  disabledButton: {
+    opacity: 0.5, // Reduce opacity for the disabled button
+  },
   photoPreviewContainer: {
     marginTop: 20,
     alignItems: 'center',

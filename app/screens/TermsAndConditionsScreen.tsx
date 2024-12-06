@@ -1,40 +1,32 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient
-import { useRouter } from 'expo-router'; // Import useRouter for navigation
-import styles from './TermsAndConditionsS/TermsAndConditionsScreen.styles'; // Import styles
+import { LinearGradient } from 'expo-linear-gradient'; 
+import { useRouter } from 'expo-router';
+import styles from './TermsAndConditionsS/TermsAndConditionsScreen.styles';
 
 const TermsAndConditionsScreen = () => {
   const router = useRouter();
 
   const handleAccept = () => {
     console.log('Terms Accepted');
-    router.push('/screens/MainDashboard'); // Navigate to the Main Dashboard after accepting terms
+    router.push('/screens/MainDashboard');
   };
 
   const handleDecline = () => {
     console.log('Terms Declined');
-    // Handle decline action (you might want to exit the app or redirect to a different screen)
   };
 
   return (
     <View style={styles.container}>
-      {/* Header with two rectangles */}
       <View style={styles.header}>
-        {/* Yellow Rectangle */}
         <View style={styles.yellowRectangle} />
-        
-        {/* Gradient Rectangle */}
         <LinearGradient
-          colors={['#FFEE00', '#00F0FF']} // Yellow to Cyan gradient
+          colors={['#FFEE00', '#00F0FF']} 
           style={styles.gradientRectangle}
         />
-        
-        {/* Header Text Inside the Header */}
         <Text style={styles.headerText}>Terms & Conditions</Text>
       </View>
 
-      {/* Scrollable Content */}
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.listItem}>
           <Text style={styles.bullet}>{"\u25A0"}</Text>
@@ -68,7 +60,6 @@ const TermsAndConditionsScreen = () => {
         </View>
       </ScrollView>
 
-      {/* Footer with buttons */}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.declineButton} onPress={handleDecline}>
           <Text style={styles.declineText}>Decline</Text>

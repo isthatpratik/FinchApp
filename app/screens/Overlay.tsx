@@ -1,41 +1,50 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Importing back icon from Ionicons
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface OverlayProps {
-  onGoBack: () => void;
+  onGoBack: () => void; // Function to handle back navigation
 }
+
+const { width, height } = Dimensions.get('window');
 
 const Overlay: React.FC<OverlayProps> = ({ onGoBack }) => {
   return (
-    <View style={styles.overlayContainer}>
-      {/* Top section */}
+    <SafeAreaView style={styles.overlayContainer}>
+      {/* Top Section: Includes Back Button, Text and Sample Image */}
       <View style={styles.topSection}>
         <TouchableOpacity onPress={onGoBack} style={styles.goBackButton}>
-          <Ionicons name="arrow-back" size={25} color="#fff" /> {/* Back icon */}
+          {/* Back Button using Ionicons */}
+          <Ionicons name="arrow-back" size={25} color="#fff" accessibilityLabel="Go back" />
         </TouchableOpacity>
+
+        {/* Scan Text */}
         <Text style={styles.scanText}>Scan the receipt/barcode</Text>
 
-        {/* Sample barcode image centered in the top section */}
+        {/* Sample Barcode Image */}
         <View style={styles.sampleImageContainer}>
           <Image
             source={require('../assets/images/sample-barcode.png')}
             style={styles.sampleImage}
+            accessibilityLabel="Sample barcode"
           />
         </View>
       </View>
 
-      {/* Camera view and overlay */}
+      {/* Camera View and Overlay */}
       <View style={styles.cameraOverlay}>
         <Image
           source={require('../assets/images/scan-overlay.png')}
           style={styles.scanOverlay}
+          accessibilityLabel="Scan overlay"
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
+// Styles with dynamic scaling based on screen size
 const styles = StyleSheet.create({
   overlayContainer: {
     position: 'absolute',
@@ -46,7 +55,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   topSection: {
-    height: '30%',
+    height: '30%', // Dynamic height based on screen size
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -57,10 +66,9 @@ const styles = StyleSheet.create({
   },
   goBackButton: {
     position: 'absolute',
-    left: 36,
+    left: 32,
     top: 42,
-    padding: 10,
-    borderRadius: 50, // Round the button
+    padding: 16,
   },
   scanText: {
     fontSize: 18,
@@ -72,10 +80,9 @@ const styles = StyleSheet.create({
     marginTop: 20, // Centering the sample image
     justifyContent: 'center',
     alignItems: 'center',
-
   },
   sampleImage: {
-    width: 300,  // Adjust the size of the barcode image
+    width: width * 0.8,  // Dynamic width based on screen size
     height: 120, // Adjust the size of the barcode image
     resizeMode: 'contain',
   },
@@ -85,8 +92,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scanOverlay: {
-    width: 320,
-    height: 320,
+    width: width * 0.9,  // Adjusting the size of the overlay dynamically
+    height: width * 0.9, // Maintain a square shape for the overlay
     resizeMode: 'contain',
     position: 'absolute',
     zIndex: 1,

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import * as SplashScreen from 'expo-splash-screen'; // Correct import
+import * as SplashScreen from 'expo-splash-screen'; 
 import { useFonts } from 'expo-font';
-import AppNavigator from './navigation/AppNavigator'; // Import the AppNavigator
+import AppNavigator from './navigation/AppNavigator'; 
 
-SplashScreen.preventAutoHideAsync(); // Prevent the splash screen from auto-hiding
+SplashScreen.preventAutoHideAsync();
 
 export default function Index() {
   const [fontsLoaded] = useFonts({
@@ -16,7 +16,7 @@ export default function Index() {
   useEffect(() => {
     const hideSplash = async () => {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync(); // Hide splash screen once fonts are loaded
+        await SplashScreen.hideAsync(); 
       }
     };
 
@@ -24,12 +24,12 @@ export default function Index() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null; // Render nothing until fonts are loaded
+    return null;
   }
 
   return (
     <SafeAreaProvider>
-      <AppNavigator />  {/* AppNavigator already handles the navigation */}
+      <AppNavigator /> 
     </SafeAreaProvider>
   );
 }

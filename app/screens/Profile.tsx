@@ -17,9 +17,8 @@ const CustomCheckBox = ({ value, onChange }: { value: boolean; onChange: (value:
 
 const ProfilePage = () => {
   const [isChecked, setIsChecked] = useState(false);
-  const [rating, setRating] = useState(3); // Rating out of 5
-  const navigation = useNavigation<any>(); // Allow any route
-
+  const [rating, setRating] = useState(3); 
+  const navigation = useNavigation<any>(); 
   const badges = [
     { id: 1, title: 'Go Getter', image: require('../assets/images/go-getter-badge.png') },
     { id: 2, title: 'Explorer', image: require('../assets/images/explorer-badge.png') },
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
   topSection: {
     backgroundColor: '#8FFF00',
     padding: 32,
-    paddingTop: 32, // Adjusted for cross button spacing
+    paddingTop: 32, 
     justifyContent: 'flex-start',
   },
   crossButton: {
