@@ -148,7 +148,7 @@ const AdditionalDetailsScreen: React.FC = () => {
           step={2}
           value={additionalDetails.warrantyDuration}
           onValueChange={(value) => handleInputChange("warrantyDuration", value)}
-          thumbImage={require("../assets/images/slider-thumb.png")}
+          thumbImage={require("../assets/images/slider.png")}
           minimumTrackTintColor="#8FFF00"
           maximumTrackTintColor="#BDBDBD"
         />
