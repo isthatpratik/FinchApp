@@ -1,145 +1,181 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+  Switch,
+} from "react-native";
+import Slider from "@react-native-community/slider";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 const AdditionalDetailsScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const router = useRouter();
   const [additionalDetails, setAdditionalDetails] = useState({
-    warrantyPeriod: '',
-    purchaseDate: '',
-    additionalNotes: '',
+    storeName: "",
+    purchaseDate: "",
+    warrantyDuration: 18,
+    additionalWarranty: false,
+    additionalWarrantyDuration: "",
+    warrantyProvider: "",
+    label: "",
   });
 
   const handleInputChange = (key: string, value: string) => {
     setAdditionalDetails({ ...additionalDetails, [key]: value });
   };
 
-  const navigateToDashboard = () => {
-    navigation.navigate('MainDashboard'); // Adjust based on your stack navigation
-  };
-
-  const navigateBackToDetails = () => {
-    navigation.goBack(); // Navigates back to AddProductDetailScreen
+  const handleToggleWarranty = () => {
+    setAdditionalDetails({
+      ...additionalDetails,
+      additionalWarranty: !additionalDetails.additionalWarranty,
+    });
   };
 
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <Ionicons
-          name="arrow-back-outline"
-          size={20}
-          color="#000"
-          onPress={navigateBackToDetails}
-        />
-        <Text style={styles.headerTitle}>Additional Details</Text>
-        <Ionicons
-          name="close-outline"
-          size={20}
-          color="#000"
-          onPress={navigateToDashboard}
-        />
-      </View>
+      <LinearGradient
+        colors={["#00F0FF", "#FFEE00"]}
+        style={styles.headerContainer}
+        start={{ x: 0.5, y: 0.9 }}
+      >
+        <View style={styles.header}>
+          <Ionicons
+            name="arrow-back-outline"
+            size={25}
+            color="#000"
+            onPress={() => router.push("/screens/AddProductDetailsScreen")}
+          />
+          <Text style={styles.headerTitle}>Product Details</Text>
+          <Ionicons
+            name="close-outline"
+            size={25}
+            color="#000"
+            onPress={() => router.push("/screens/MainDashboard")}
+          />
+        </View>
+      </LinearGradient>
 
       {/* Form */}
       <View style={styles.form}>
-        <Text style={styles.label}>Warranty Period (in months)</Text>
+        <Text style={styles.label}>Which store did you buy it from?</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter warranty period"
-          keyboardType="numeric"
-          value={additionalDetails.warrantyPeriod}
-          onChangeText={(text) => handleInputChange('warrantyPeriod', text)}
+          placeholder="Laptop store"
+          value={additionalDetails.storeName}
+          onChangeText={(text) => handleInputChange("storeName", text)}
         />
 
-        <Text style={styles.label}>Purchase Date</Text>
+        <Text style={styles.label}>Purchase date</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter purchase date"
+          placeholder="10 Jun 2020"
           value={additionalDetails.purchaseDate}
-          onChangeText={(text) => handleInputChange('purchaseDate', text)}
+          onChangeText={(text) => handleInputChange("purchaseDate", text)}
         />
 
-        <Text style={styles.label}>Additional Notes</Text>
+        <Text style={styles.label}>Duration (months)</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={12}
+          maximumValue={36}
+          step={1}
+          value={additionalDetails.warrantyDuration}
+          onValueChange={(value) =>
+            handleInputChange("warrantyDuration", value.toString())
+          }
+        />
+        <Text style={styles.sliderValue}>
+          {additionalDetails.warrantyDuration} months
+        </Text>
+
+        <Text style={styles.label}>
+          Any additional warranty for the product?
+        </Text>
+        <Switch
+          value={additionalDetails.additionalWarranty}
+          onValueChange={handleToggleWarranty}
+        />
+        {additionalDetails.additionalWarranty && (
+          <TextInput
+            style={styles.input}
+            placeholder="Duration"
+            value={additionalDetails.additionalWarrantyDuration}
+            onChangeText={(text) =>
+              handleInputChange("additionalWarrantyDuration", text)
+            }
+          />
+        )}
+
+        <Text style={styles.label}>Warranty Provider</Text>
         <TextInput
-          style={[styles.input, styles.textArea]}
-          placeholder="Enter any additional notes"
-          multiline={true}
-          numberOfLines={4}
-          value={additionalDetails.additionalNotes}
-          onChangeText={(text) => handleInputChange('additionalNotes', text)}
+          style={styles.input}
+          placeholder="Lorem Ipsum"
+          value={additionalDetails.warrantyProvider}
+          onChangeText={(text) => handleInputChange("warrantyProvider", text)}
         />
       </View>
 
-      {/* Footer */}
+      {/* Confirm Button */}
       <TouchableOpacity
-        style={styles.finishButton}
-        onPress={navigateToDashboard}
+        style={styles.confirmButton}
+        onPress={() => router.push("/screens/MainDashboard")}
       >
-        <Text style={styles.finishButtonText}>Finish</Text>
+        <Text style={styles.confirmButtonText}>Confirm</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F7F7F7',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#EDEDED" },
+
+  headerContainer: { 
+    paddingTop: 32, 
+    borderBottomWidth: 2 },
+
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 16,
   },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#000',
+
+  headerTitle: { 
+    fontSize: 20, 
+    fontFamily: "PoppinsSemiBold", 
+    color: "#000" },
+
+  form: { 
+    padding: 32 
   },
-  form: {
-    flex: 1,
+
+  label: { 
+    marginBottom: 8, 
+    color: "#000", 
+    fontFamily: "PoppinsMedium" 
   },
-  label: {
-    fontSize: 14,
-    marginBottom: 8,
-    fontWeight: '600',
-    color: '#000',
-  },
+  
   input: {
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderRadius: 6,
+    borderWidth: 1.5,
     padding: 10,
     marginBottom: 16,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
-  textArea: {
-    textAlignVertical: 'top',
-    height: 100,
+  slider: { marginVertical: 16 },
+  sliderValue: { alignSelf: "flex-end", marginBottom: 16 },
+  confirmButton: {
+    paddingVertical: 16,
+    alignItems: "center",
+    backgroundColor: "#000",
   },
-  finishButton: {
-    backgroundColor: '#000',
-    padding: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  finishButtonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
+  confirmButtonText: { color: "#FFF" },
 });
 
 export default AdditionalDetailsScreen;

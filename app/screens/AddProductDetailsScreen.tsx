@@ -11,11 +11,13 @@ import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 
-const { width } = Dimensions.get('window');
+// const { width } = Dimensions.get('window');
 
 const AddProductDetailsScreen: React.FC = () => {
   const navigation = useNavigation();
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState({
     purchasePrice: '',
@@ -32,7 +34,7 @@ const AddProductDetailsScreen: React.FC = () => {
   };
 
   const navigateToDashboard = () => {
-    navigation.navigate('MainDashboard');
+    router.push('/screens/MainDashboard');
   };
 
   const renderPageOne = () => (
@@ -51,7 +53,7 @@ const AddProductDetailsScreen: React.FC = () => {
             onPress={navigateToDashboard}
           />
           <Text style={styles.headerTitle}>Product Details</Text>
-          <Ionicons name="close-outline" size={28} color="transparent" />
+          <Ionicons name="close-outline" size={28} onPress={navigateToDashboard}/>
         </View>
       </LinearGradient>
 
@@ -136,7 +138,7 @@ const AddProductDetailsScreen: React.FC = () => {
       {/* Footer */}
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={() => setPage(2)}
+        onPress={() => router.push('/screens/AdditionalDetailsScreen')} // Navigate to AdditionalDetailsScreen
       >
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>

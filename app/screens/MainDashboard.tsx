@@ -14,7 +14,7 @@ import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import ProfilePage from "./Profile";
 import { useNavigation } from "@react-navigation/native";
 import CameraScreen from "./CameraScreen";
-import AddProductDetails from "./AddProductDetailsScreen"; // Import your AddProductDetails screen here
+// Import your AddProductDetails screen here
 import AddProductDetailsScreen from "./AddProductDetailsScreen";
 
 const { height } = Dimensions.get("window");
