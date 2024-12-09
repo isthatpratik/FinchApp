@@ -5,9 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Switch,
 } from "react-native";
-import Slider from "@react-native-community/slider";
+import CheckBox from "@react-native-community/checkbox";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
@@ -19,27 +18,24 @@ const AdditionalDetailsScreen: React.FC = () => {
     storeName: "",
     purchaseDate: "",
     warrantyDuration: 18,
-    additionalWarranty: false,
+    additionalWarrantyOption: false,
     additionalWarrantyDuration: "",
     warrantyProvider: "",
     label: "",
-    warrantyOption: null as string | null, // Explicitly define as string | null
-    additionalWarrantyOption: false, // Track additional warranty (Yes/No)
+    warrantyOption: null as string | null,
   });
+
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
   const handleInputChange = (key: string, value: any) => {
     setAdditionalDetails({ ...additionalDetails, [key]: value });
   };
 
-  const handleDateChange = (date: Date) => {
+  const handleDatePickerConfirm = (date: Date) => {
     setAdditionalDetails({
       ...additionalDetails,
       purchaseDate: date.toLocaleDateString(),
     });
-  };
-
-  const handleDatePickerConfirm = (date: Date) => {
-    handleDateChange(date);
     setDatePickerVisible(false);
   };
 
@@ -47,19 +43,10 @@ const AdditionalDetailsScreen: React.FC = () => {
     setDatePickerVisible(false);
   };
 
-  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-
-  const handleWarrantyOptionChange = (option: boolean) => {
+  const handleCheckboxChange = (option: boolean) => {
     setAdditionalDetails({
       ...additionalDetails,
       additionalWarrantyOption: option,
-    });
-  };
-
-  const handleWarrantySelectionChange = (option: string | null) => {
-    setAdditionalDetails({
-      ...additionalDetails,
-      warrantyOption: option,
     });
   };
 
@@ -115,15 +102,18 @@ const AdditionalDetailsScreen: React.FC = () => {
           onCancel={handleDatePickerCancel}
         />
 
-        {/* Warranty Option: In Warranty / No Warranty Toggle */}
+        {/* Warranty Option */}
         <Text style={styles.label}>Warranty Status</Text>
         <View style={styles.warrantyOptionContainer}>
           <TouchableOpacity
             style={[
               styles.warrantyButton,
-              additionalDetails.warrantyOption === "inWarranty" && styles.selectedButton,
+              additionalDetails.warrantyOption === "inWarranty" &&
+                styles.selectedButton,
             ]}
-            onPress={() => handleWarrantySelectionChange("inWarranty")}
+            onPress={() =>
+              handleInputChange("warrantyOption", "inWarranty")
+            }
           >
             <Text>In Warranty</Text>
           </TouchableOpacity>
@@ -131,65 +121,45 @@ const AdditionalDetailsScreen: React.FC = () => {
           <TouchableOpacity
             style={[
               styles.warrantyButton,
-              additionalDetails.warrantyOption === "noWarranty" && styles.selectedButton,
+              additionalDetails.warrantyOption === "noWarranty" &&
+                styles.selectedButton,
             ]}
-            onPress={() => handleWarrantySelectionChange("noWarranty")}
+            onPress={() =>
+              handleInputChange("warrantyOption", "noWarranty")
+            }
           >
             <Text>No Warranty</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Warranty Duration */}
-        <Text style={styles.label}>Warranty Duration (months)</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={6}
-          maximumValue={36}
-          step={2}
-          value={additionalDetails.warrantyDuration}
-          onValueChange={(value) => handleInputChange("warrantyDuration", value)}
-          thumbImage={require("../assets/images/slider.png")}
-          minimumTrackTintColor="#8FFF00"
-          maximumTrackTintColor="#BDBDBD"
-        />
-        <Text style={styles.sliderValue}>
-          {additionalDetails.warrantyDuration} months
+        {/* Additional Warranty */}
+        <Text style={styles.label}>
+          Any additional warranty for the product?
         </Text>
-
-        {/* Additional Warranty (Yes/No Checkboxes) */}
-        <Text style={styles.label}>Any additional warranty for the product?</Text>
-        <View style={styles.checkboxContainer}>
-          <TouchableOpacity
-            style={[
-              styles.checkboxButton,
-              additionalDetails.additionalWarrantyOption === false && styles.selectedButton,
-            ]}
-            onPress={() => handleWarrantyOptionChange(false)}
-          >
-            <Text>No</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.checkboxButton,
-              additionalDetails.additionalWarrantyOption === true && styles.selectedButton,
-            ]}
-            onPress={() => handleWarrantyOptionChange(true)}
-          >
-            <Text>Yes</Text>
-          </TouchableOpacity>
-        </View>
-
-        {additionalDetails.additionalWarrantyOption && (
+        <View style={styles.checkboxWithInput}>
+          <View style={styles.checkboxRow}>
+            <CheckBox
+              value={!additionalDetails.additionalWarrantyOption}
+              onValueChange={() => handleCheckboxChange(false)}
+            />
+            <Text style={styles.checkboxLabel}>No</Text>
+          </View>
+          <View style={styles.checkboxRow}>
+            <CheckBox
+              value={additionalDetails.additionalWarrantyOption}
+              onValueChange={() => handleCheckboxChange(true)}
+            />
+            <Text style={styles.checkboxLabel}>Yes</Text>
+          </View>
           <TextInput
-            style={styles.input}
-            placeholder="Duration"
+            style={[styles.input, styles.additionalWarrantyInput]}
+            placeholder="Enter duration"
             value={additionalDetails.additionalWarrantyDuration}
             onChangeText={(text) =>
               handleInputChange("additionalWarrantyDuration", text)
             }
           />
-        )}
+        </View>
 
         {/* Warranty Provider */}
         <Text style={styles.label}>Warranty Provider</Text>
@@ -197,7 +167,9 @@ const AdditionalDetailsScreen: React.FC = () => {
           style={styles.input}
           placeholder="Lorem Ipsum"
           value={additionalDetails.warrantyProvider}
-          onChangeText={(text) => handleInputChange("warrantyProvider", text)}
+          onChangeText={(text) =>
+            handleInputChange("warrantyProvider", text)
+          }
         />
 
         {/* Label */}
@@ -208,15 +180,15 @@ const AdditionalDetailsScreen: React.FC = () => {
           value={additionalDetails.label}
           onChangeText={(text) => handleInputChange("label", text)}
         />
-      </View>
 
-      {/* Confirm Button */}
-      <TouchableOpacity
-        style={styles.confirmButton}
-        onPress={() => router.push("/screens/MainDashboard")}
-      >
-        <Text style={styles.confirmButtonText}>Confirm</Text>
-      </TouchableOpacity>
+        {/* Confirm Button */}
+        <TouchableOpacity
+          style={styles.confirmButton}
+          onPress={() => router.push("/screens/MainDashboard")}
+        >
+          <Text style={styles.confirmButtonText}>Confirm</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -240,48 +212,24 @@ const styles = StyleSheet.create({
   },
 
   form: {
-    padding: 32,
+    padding: 16,
+    width: "90%",
+    alignSelf: "center",
   },
 
   label: {
-    marginBottom: 8,
+    marginBottom: 4,
     color: "#000",
     fontFamily: "PoppinsMedium",
   },
 
   input: {
     borderWidth: 1.5,
-    padding: 10,
-    marginBottom: 16,
-    backgroundColor: "#FFF",
-  },
-
-  slider: {
-    marginVertical: 16,
-    height: 5,
-  },
-
-  sliderValue: { alignSelf: "flex-end", marginBottom: 16 },
-
-  checkboxContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-
-  checkboxButton: {
-    flex: 1,
     padding: 12,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1.5,
-    borderColor: "#000",
-  },
-
-  selectedButton: {
+    marginBottom: 8,
     backgroundColor: "#FFF",
-    borderColor: "#00F0FF",
+    borderColor: "#BDBDBD",
+    borderRadius: 4,
   },
 
   warrantyOptionContainer: {
@@ -292,21 +240,62 @@ const styles = StyleSheet.create({
 
   warrantyButton: {
     flex: 1,
-    padding: 12,
-    backgroundColor: "transparent",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1.5,
+    borderColor: "#BDBDBD",
+    borderRadius: 4,
+    backgroundColor: "#FFF",
+    marginHorizontal: 4,
+  },
+
+  selectedButton: {
     borderColor: "#000",
+    backgroundColor: "#EDEDED",
+  },
+
+  checkboxWithInput: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+    gap: 8,
+  },
+
+  checkboxRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  checkboxLabel: {
+    fontSize: 16,
+    color: "#000",
+    marginHorizontal: 8,
+    fontFamily: "PoppinsMedium",
+  },
+
+  additionalWarrantyInput: {
+    flex: 1,
+    marginBottom: 0,
   },
 
   confirmButton: {
     paddingVertical: 16,
     alignItems: "center",
     backgroundColor: "#000",
+    width: "100%",
+    alignSelf: "center",
+    marginTop: 8,
+    borderRadius: 4,
   },
 
-  confirmButtonText: { color: "#FFF" },
+  confirmButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontFamily: "PoppinsMedium",
+  },
 });
+
 
 export default AdditionalDetailsScreen;
