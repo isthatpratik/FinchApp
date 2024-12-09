@@ -7,19 +7,19 @@ const styles = StyleSheet.create({
   },
   header: {
     width: "100%",
-    height: 120, // Total height for the header
+    height: 100, // Total height for the header
     justifyContent: "center", // Center the content vertically
     alignItems: "center",
     borderBottomWidth: 3,
     borderColor: "#0F0F0F",
   },
   yellowRectangle: {
-    height: "90%", // Yellow rectangle that takes most of the header height
+    height: "95%", // Yellow rectangle that takes most of the header height
     backgroundColor: "#FFEE00", // Yellow color
     width: "100%", // Full width of the screen
   },
   gradientRectangle: {
-    height: "10%", // The height of the gradient part
+    height: "8%", // The height of the gradient part
     width: "100%", // Full width of the screen
   },
   headerText: {
@@ -33,13 +33,13 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 32,
-    paddingBottom: 100,
+    padding: 26,
+    // paddingBottom: 100,
   },
 
   listItem: {
     flexDirection: "row", 
-    marginBottom: 12, 
+    marginBottom: 8, 
     flexWrap: "wrap", 
   },
   bullet: {
@@ -58,11 +58,12 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 32,
+    padding: 20,
     backgroundColor: "#FFF",
     width: "95%",
-    position: "absolute", // Position footer at the bottom
-    bottom: -8, // Align it at the bottom of the screen
+    position: "absolute", 
+    bottom: 0,
+    height: 90
   },
   declineButton: {
     flex: 1,
@@ -81,7 +82,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 8,
     borderRadius: 2,
-    height: 48,
   },
   acceptText: {
     color: "#FFF",

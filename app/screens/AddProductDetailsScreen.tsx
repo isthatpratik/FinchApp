@@ -76,7 +76,7 @@ const AddProductDetailsScreen: React.FC = () => {
               <Picker
                 selectedValue={formData.currency}
                 style={styles.currencyDropdown}
-                onValueChange={(itemValue) =>
+                onValueChange={(itemValue: string) =>
                   handleInputChange("currency", itemValue)
                 }
               >
@@ -91,7 +91,7 @@ const AddProductDetailsScreen: React.FC = () => {
           <View style={styles.picker}>
             <Picker
               selectedValue={formData.productCategory}
-              onValueChange={(itemValue) =>
+              onValueChange={(itemValue: string) =>
                 handleInputChange("productCategory", itemValue)
               }
             >
@@ -112,7 +112,7 @@ const AddProductDetailsScreen: React.FC = () => {
           <View style={styles.picker}>
             <Picker
               selectedValue={formData.brandName}
-              onValueChange={(itemValue) =>
+              onValueChange={(itemValue: string) =>
                 handleInputChange("brandName", itemValue)
               }
             >
@@ -208,10 +208,12 @@ const styles = StyleSheet.create({
   },
   currencyDropdownWrapper: {
     flex: 1,
+    fontFamily: 'PoppinsMedium',
   },
   currencyDropdown: {
     backgroundColor: "transparent",
     width: '90%',
+    fontFamily: 'PoppinsMedium',
   },
   picker: {
     backgroundColor: "#FFFFFF",
@@ -219,6 +221,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: "#000",
     borderRadius: 1,
+    fontFamily: 'PoppinsMedium',
   },
   label: {
     fontSize: 14,
@@ -234,6 +237,7 @@ const styles = StyleSheet.create({
     height: 55,
     marginBottom: 16,
     backgroundColor: "#FFF",
+    fontFamily: 'PoppinsMedium',
   },
   footer: {
     paddingHorizontal: 16,
@@ -251,7 +255,8 @@ const styles = StyleSheet.create({
   continueButtonText: {
     color: "#FFF",
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 13,
+    fontFamily: 'PoppinsSemiBold',
   },
 });
 
