@@ -3,6 +3,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen'; 
 import { useFonts } from 'expo-font';
 import AppNavigator from './navigation/AppNavigator'; 
+import "../global.css";
+import 'nativewind';
 
 SplashScreen.preventAutoHideAsync();
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
-import SplashScreen from '../app/screens/SplashScreenComponent'; // Import your splash screen
+import SplashScreen from '../app/screens/SplashScreenComponent';
+import "../global.css"; // Import your splash screen
 
 const RootLayout = () => {
   const [isAppReady, setIsAppReady] = useState(false);
