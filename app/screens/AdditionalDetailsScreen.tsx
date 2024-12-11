@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
 } from "react-native";
 import { Slider } from "@miblanchard/react-native-slider";
 import { Ionicons } from "@expo/vector-icons";
@@ -24,7 +23,7 @@ const AdditionalDetailsScreen: React.FC = () => {
     additionalWarrantyDuration: "",
     warrantyProvider: "",
     label: "",
-    warrantyOption: "noWarranty",
+    warrantyOption: "noWarranty", // Default to "noWarranty"
     additionalWarrantyOption: false,
   });
 
@@ -57,11 +56,14 @@ const AdditionalDetailsScreen: React.FC = () => {
     });
   };
 
+  // Track slider values for display
   const [minSliderValue, setMinSliderValue] = useState(12);
   const [maxSliderValue, setMaxSliderValue] = useState(36);
-  const [sliderValue, setSliderValue] = useState(18);
+
+  const [sliderValue, setSliderValue] = useState(18); // Use a separate state for slider value
 
   useEffect(() => {
+    // Update slider value when warrantyDuration changes
     setSliderValue(additionalDetails.warrantyDuration);
   }, [additionalDetails.warrantyDuration]);
 
@@ -96,162 +98,153 @@ const AdditionalDetailsScreen: React.FC = () => {
         </View>
       </LinearGradient>
 
-      {/* Scrollable Form */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.form}>
-          <Text style={styles.label}>Which store did you buy it from?</Text>
+      {/* Form */}
+      <View style={styles.form}>
+        <Text style={styles.label}>Which store did you buy it from?</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Laptop store"
+          value={additionalDetails.storeName}
+          onChangeText={(text) => handleInputChange("storeName", text)}
+        />
+
+        <Text style={styles.label}>Purchase date</Text>
+        <TouchableOpacity onPress={() => setDatePickerVisible(true)}>
           <TextInput
             style={styles.input}
-            placeholder="Laptop store"
-            value={additionalDetails.storeName}
-            onChangeText={(text) => handleInputChange("storeName", text)}
+            placeholder="Select Date"
+            value={additionalDetails.purchaseDate}
+            editable={false}
           />
+        </TouchableOpacity>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          date={new Date()}
+          onConfirm={handleDatePickerConfirm}
+          onCancel={handleDatePickerCancel}
+        />
 
-          <Text style={styles.label}>Purchase date</Text>
-          <TouchableOpacity onPress={() => setDatePickerVisible(true)}>
-            <TextInput
-              style={styles.input}
-              placeholder="Select Date"
-              value={additionalDetails.purchaseDate}
-              editable={false}
-            />
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            mode="date"
-            date={new Date()}
-            onConfirm={handleDatePickerConfirm}
-            onCancel={handleDatePickerCancel}
-          />
-
-          {/* Warranty Option */}
-          <Text style={styles.label}>Warranty Status</Text>
-          <View style={styles.warrantyOptionContainer}>
-            <TouchableOpacity
-              style={[
-                styles.warrantyButton,
-                additionalDetails.warrantyOption === "inWarranty" &&
-                  styles.selectedButton,
-              ]}
-              onPress={() => handleWarrantyOptionChange("inWarranty")}
-            >
-              <Text style={styles.textwarranty}>In Warranty</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.warrantyButton,
-                additionalDetails.warrantyOption === "noWarranty" &&
-                  styles.selectedButton,
-              ]}
-              onPress={() => handleWarrantyOptionChange("noWarranty")}
-            >
-              <Text style={styles.textwarranty}>No Warranty</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Warranty Duration */}
-          {additionalDetails.warrantyOption === "inWarranty" && (
-            <>
-              <Text style={styles.label}>Warranty Duration (months)</Text>
-              <Slider
-                value={sliderValue}
-                minimumValue={12}
-                maximumValue={36}
-                step={2}
-                onValueChange={handleSliderChange}
-                minimumTrackTintColor="#8FFF00"
-                maximumTrackTintColor="#BDBDBD"
-                trackStyle={styles.trackStyle}
-                thumbStyle={styles.thumbStyle}
-                animateTransitions={true}
-                animationType="spring"
-              />
-              <View style={styles.sliderValuesContainer}>
-                <Text style={[styles.sliderValue, { color: "#828282" }]}>
-                  {minSliderValue}
-                </Text>
-                <Text style={styles.sliderValue}>{sliderValue}</Text>
-                <Text style={[styles.sliderValue, { color: "#828282" }]}>
-                  {maxSliderValue}
-                </Text>
-              </View>
-            </>
-          )}
-
-          {/* Additional Warranty */}
-          <Text style={styles.label}>
-            Any additional warranty for the product?
-          </Text>
-          <View style={styles.checkboxAndInputContainer}>
-            <View style={styles.checkboxItem}>
-              <Checkbox
-                value={additionalDetails.additionalWarrantyOption === false}
-                onValueChange={() =>
-                  handleInputChange("additionalWarrantyOption", false)
-                }
-                color="black"
-              />
-              <Text style={styles.checkboxText}>No</Text>
-            </View>
-
-            <View style={styles.checkboxItem}>
-              <Checkbox
-                value={additionalDetails.additionalWarrantyOption === true}
-                onValueChange={() =>
-                  handleInputChange("additionalWarrantyOption", true)
-                }
-                color="black"
-              />
-              <Text style={styles.checkboxText}>Yes</Text>
-            </View>
-
-            <TextInput
-              style={[
-                styles.input,
-                styles.additionalWarrantyInput,
-                {
-                  backgroundColor: additionalDetails.additionalWarrantyOption
-                    ? "#FFF"
-                    : "#F0F0F0",
-                },
-              ]}
-              placeholder="Duration"
-              value={additionalDetails.additionalWarrantyDuration}
-              onChangeText={(text) =>
-                handleInputChange("additionalWarrantyDuration", text)
-              }
-              editable={additionalDetails.additionalWarrantyOption}
-            />
-          </View>
-
-          {/* Warranty Provider */}
-          <Text style={styles.label}>Warranty Provider</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Lorem Ipsum"
-            value={additionalDetails.warrantyProvider}
-            onChangeText={(text) => handleInputChange("warrantyProvider", text)}
-          />
-
-          {/* Label */}
-          <Text style={styles.label}>Add Label </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="e.g., Lounge/Bedroom"
-            value={additionalDetails.label}
-            onChangeText={(text) => handleInputChange("label", text)}
-          />
-
-          {/* Confirm Button */}
+        {/* Warranty Option: In Warranty / No Warranty Toggle */}
+        <Text style={styles.label}>Warranty Status</Text>
+        <View style={styles.warrantyOptionContainer}>
           <TouchableOpacity
-            style={styles.confirmButton}
-            onPress={() => router.push("/screens/MainDashboard")}
+            style={[
+              styles.warrantyButton,
+              additionalDetails.warrantyOption === "inWarranty" &&
+                styles.selectedButton,
+            ]}
+            onPress={() => handleWarrantyOptionChange("inWarranty")}
           >
-            <Text style={styles.confirmButtonText}>Confirm</Text>
+            <Text style={styles.textwarranty}>In Warranty</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.warrantyButton,
+              additionalDetails.warrantyOption === "noWarranty" &&
+                styles.selectedButton,
+            ]}
+            onPress={() => handleWarrantyOptionChange("noWarranty")}
+          >
+            <Text style={styles.textwarranty}>No Warranty</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+
+        {/* Warranty Duration */}
+        <Text style={styles.label}>Warranty Duration (months)</Text>
+        <Slider
+          value={sliderValue}
+          minimumValue={12}
+          maximumValue={36}
+          step={2}
+          onValueChange={handleSliderChange}
+          minimumTrackTintColor="#8FFF00"
+          maximumTrackTintColor="#BDBDBD"
+          trackStyle={styles.trackStyle}
+          thumbStyle={styles.thumbStyle}
+          animateTransitions={true}
+          animationType="spring"
+          disabled={additionalDetails.warrantyOption === "noWarranty"} // Disable slider when "No Warranty" is selected
+        />
+        <View style={styles.sliderValuesContainer}>
+          <Text style={[styles.sliderValue, { color: "#828282" }]}>
+            {minSliderValue}
+          </Text>
+          <Text style={styles.sliderValue}>{sliderValue}</Text>
+          <Text style={[styles.sliderValue, { color: "#828282" }]}>
+            {maxSliderValue}
+          </Text>
+        </View>
+
+        {/* Additional Warranty (Yes/No Checkboxes) */}
+        <Text style={styles.label}>
+          Any additional warranty for the product?
+        </Text>
+        <View style={styles.checkboxAndInputContainer}>
+          <View style={styles.checkboxItem}>
+            <Checkbox
+              value={additionalDetails.additionalWarrantyOption === false}
+              onValueChange={() =>
+                handleInputChange("additionalWarrantyOption", false)
+              }
+              color="black"
+            />
+            <Text style={styles.checkboxText}>No</Text>
+          </View>
+
+          <View style={styles.checkboxItem}>
+            <Checkbox
+              value={additionalDetails.additionalWarrantyOption === true}
+              onValueChange={() =>
+                handleInputChange("additionalWarrantyOption", true)
+              }
+              color="black"
+            />
+            <Text style={styles.checkboxText}>Yes</Text>
+          </View>
+
+          <TextInput
+            style={[
+              styles.input,
+              styles.additionalWarrantyInput,
+              { backgroundColor: additionalDetails.additionalWarrantyOption ? "#FFF" : "#F0F0F0" }, // Grey out if "No" is selected
+            ]}
+            placeholder="Duration"
+            value={additionalDetails.additionalWarrantyDuration}
+            onChangeText={(text) =>
+              handleInputChange("additionalWarrantyDuration", text)
+            }
+            editable={additionalDetails.additionalWarrantyOption} // Disable if "No" is selected
+          />
+        </View>
+
+        {/* Warranty Provider */}
+        <Text style={styles.label}>Warranty Provider</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Lorem Ipsum"
+          value={additionalDetails.warrantyProvider}
+          onChangeText={(text) => handleInputChange("warrantyProvider", text)}
+        />
+
+        {/* Label */}
+        <Text style={styles.label}>Add Label </Text>
+        <TextInput
+          style={styles.input}
+          placeholder="e.g., Lounge/Bedroom"
+          value={additionalDetails.label}
+          onChangeText={(text) => handleInputChange("label", text)}
+        />
+
+        {/* Confirm Button */}
+        <TouchableOpacity
+          style={styles.confirmButton}
+          onPress={() => router.push("/screens/MainDashboard")}
+        >
+          <Text style={styles.confirmButtonText}>Confirm</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -393,11 +386,6 @@ const styles = StyleSheet.create({
 
   additionalWarrantyInput: {
     flex: 0.75,
-  },
-
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 16,
   },
 });
 

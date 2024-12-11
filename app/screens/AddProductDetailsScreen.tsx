@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  StyleSheet,
   ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
@@ -35,51 +36,46 @@ const AddProductDetailsScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#EDEDED]">
+    <SafeAreaView style={styles.container}>
       {/* Header */}
       <LinearGradient
         colors={["#00F0FF", "#FFEE00"]}
+        style={styles.headerContainer}
         start={{ x: 0.5, y: 0.9 }}
-        className="p-4 border-b-2"
       >
-        <View className="flex-row items-center justify-between px-4 py-3">
+        <View style={styles.header}>
           <Ionicons
-            name="arrow-back"
+            name="arrow-back-outline"
             size={25}
             color="#000"
             onPress={navigateToDashboard}
           />
-          <Text className="text-[20px] sm:text-[16px] font-[Poppins-SemiBold] text-black">
-            Product Details
-          </Text>
+          <Text style={styles.headerTitle}>Product Details</Text>
           <Ionicons
-            name="close"
-            size={25}
-            color="#000"
+            name="close-outline"
+            size={28}
             onPress={navigateToDashboard}
           />
         </View>
       </LinearGradient>
 
       {/* Form */}
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
-        <View className="mt-4 w-[90%] self-center">
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.form}>
           {/* Purchase Price */}
-          <Text className="text-center text-[14px] sm:text-xs font-[Poppins-SemiBold] text-black mb-1">
-            Purchase Price
-          </Text>
-          <View className="flex-row items-center justify-between border-b-2 border-black mb-6 w-[80%] self-center">
+          <Text style={styles.purchasePriceLabel}>Purchase Price</Text>
+          <View style={styles.purchasePriceSection}>
             <TextInput
-              className="flex-1 text-[20px] sm:text-base text-black font-[Poppins-SemiBold] text-center"
+              style={styles.purchasePriceInput}
               placeholder="2000.00"
               keyboardType="numeric"
               value={formData.purchasePrice}
               onChangeText={(text) => handleInputChange("purchasePrice", text)}
             />
-            <View className="flex-1 text-[14px]">
+            <View style={styles.currencyDropdownWrapper}>
               <Picker
                 selectedValue={formData.currency}
-                style={{ backgroundColor: "transparent", width: "90%" }}
+                style={styles.currencyDropdown}
                 onValueChange={(itemValue: string) =>
                   handleInputChange("currency", itemValue)
                 }
@@ -91,10 +87,8 @@ const AddProductDetailsScreen: React.FC = () => {
           </View>
 
           {/* Other Fields */}
-          <Text className="text-sm sm:text-xs font-[Poppins-Medium] text-black mb-2">
-            Product Category
-          </Text>
-          <View className="bg-white mb-4 border-2 border-black rounded-sm">
+          <Text style={styles.label}>Product Category</Text>
+          <View style={styles.picker}>
             <Picker
               selectedValue={formData.productCategory}
               onValueChange={(itemValue: string) =>
@@ -106,20 +100,16 @@ const AddProductDetailsScreen: React.FC = () => {
             </Picker>
           </View>
 
-          <Text className="text-sm sm:text-xs font-[Poppins-Medium] text-black mb-2">
-            Product Name
-          </Text>
+          <Text style={styles.label}>Product Name</Text>
           <TextInput
-            className="border-2 border-black rounded-[1] px-4 py-5 mb-4 bg-white text-sm sm:text-xs font-[Poppins-Medium]"
+            style={styles.input}
             placeholder="Enter product name"
             value={formData.productName}
             onChangeText={(text) => handleInputChange("productName", text)}
           />
 
-          <Text className="text-sm sm:text-xs font-[Poppins-Medium] text-black mb-2">
-            Brand Name
-          </Text>
-          <View className="bg-white mb-4 border-2 border-black rounded-sm">
+          <Text style={styles.label}>Brand Name</Text>
+          <View style={styles.picker}>
             <Picker
               selectedValue={formData.brandName}
               onValueChange={(itemValue: string) =>
@@ -131,21 +121,17 @@ const AddProductDetailsScreen: React.FC = () => {
             </Picker>
           </View>
 
-          <Text className="text-sm sm:text-xs font-[Poppins-Medium] text-black mb-2">
-            Serial Number
-          </Text>
+          <Text style={styles.label}>Serial Number</Text>
           <TextInput
-            className="border-2 border-black rounded-sm px-4 py-5 mb-4 bg-white text-sm sm:text-xs font-[Poppins-Medium]"
+            style={styles.input}
             placeholder="Enter serial number"
             value={formData.serialNumber}
             onChangeText={(text) => handleInputChange("serialNumber", text)}
           />
 
-          <Text className="text-sm sm:text-xs font-[Poppins-Medium] text-black mb-2">
-            Model Number
-          </Text>
+          <Text style={styles.label}>Model Number</Text>
           <TextInput
-            className="border-2 border-black rounded-[1] px-4 py-5 bg-white text-sm sm:text-xs font-[Poppins-Medium]"
+            style={styles.input}
             placeholder="Enter model number"
             value={formData.modelNumber}
             onChangeText={(text) => handleInputChange("modelNumber", text)}
@@ -154,18 +140,124 @@ const AddProductDetailsScreen: React.FC = () => {
       </ScrollView>
 
       {/* Footer */}
-      <View className="px-4 py-4 mb-4">
+      <View style={styles.footer}>
         <TouchableOpacity
-          className="bg-[#0F0F0F] py-4 rounded-[1] items-center w-[90%] self-center"
+          style={styles.continueButton}
           onPress={() => router.push("/screens/AdditionalDetailsScreen")}
         >
-          <Text className="text-white font-bold text-[13px] p-2 sm:text-xs font-[Poppins-SemiBold]">
-            Continue
-          </Text>
+          <Text style={styles.continueButtonText}>Continue</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#EDEDED",
+  },
+  headerContainer: {
+    paddingTop: 16,
+    borderBottomWidth: 2,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: "PoppinsSemiBold",
+    color: "#000",
+  },
+  scrollContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  form: {
+    marginTop: 8,
+    width: '90%',
+    alignSelf: 'center',
+  },
+  purchasePriceLabel: {
+    fontSize: 14,
+    marginBottom: 2,
+    color: "#000",
+    fontFamily: "PoppinsSemiBold",
+    textAlign: "center",
+  },
+  purchasePriceSection: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+    borderBottomWidth: 1.5,
+    borderColor: "#000",
+    width: '80%',
+    alignSelf: 'center',
+  },
+  purchasePriceInput: {
+    flex: 1,
+    fontSize: 20,
+    color: "#000",
+    fontFamily: "PoppinsSemiBold",
+    textAlign: "center",
+  },
+  currencyDropdownWrapper: {
+    flex: 1,
+    fontFamily: 'PoppinsMedium',
+  },
+  currencyDropdown: {
+    backgroundColor: "transparent",
+    width: '90%',
+    fontFamily: 'PoppinsMedium',
+  },
+  picker: {
+    backgroundColor: "#FFFFFF",
+    marginBottom: 16,
+    borderWidth: 1.5,
+    borderColor: "#000",
+    borderRadius: 1,
+    fontFamily: 'PoppinsMedium',
+  },
+  label: {
+    fontSize: 14,
+    marginBottom: 8,
+    color: "#000",
+    fontFamily: "PoppinsMedium",
+  },
+  input: {
+    borderWidth: 1.5,
+    borderColor: "#000",
+    borderRadius: 1,
+    paddingHorizontal: 16,
+    height: 55,
+    marginBottom: 16,
+    backgroundColor: "#FFF",
+    fontFamily: 'PoppinsMedium',
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  continueButton: {
+    backgroundColor: "#000",
+    paddingVertical: 16,
+    borderRadius: 1,
+    alignSelf: "center",
+    alignItems: 'center',
+    width: "90%",
+    marginBottom: 16,
+  },
+  continueButtonText: {
+    color: "#FFF",
+    fontWeight: "bold",
+    fontSize: 13,
+    fontFamily: 'PoppinsSemiBold',
+  },
+});
 
 export default AddProductDetailsScreen;
