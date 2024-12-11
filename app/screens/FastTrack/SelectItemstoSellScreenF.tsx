@@ -11,7 +11,7 @@ const SelectProductScreen = ({ navigation }: any) => {
       <Text style={styles.title}>Select a product</Text>
       <View style={styles.productBox}>
         <View style={styles.productDetails}>
-          <Image source={require('C:/Users/fusio/Desktop/FinchApp/app/assets/images/icons/Group30.png')} style={styles.productImage} />
+          <Image source={require('C:/Users/prati/Downloads/FinchApp/FinchApp/app/assets/images/icons/Group 30.png')} style={styles.productImage}/>
           <View>
             <Text style={styles.productName}>Airbook Ultra</Text>
             <Text>John's laptop</Text>
