@@ -16,6 +16,8 @@ import CameraScreen from "./CameraScreen";
 import AddProductDetailsScreen from "./AddProductDetailsScreen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SpecialsScreen from "./Specials";
+import SellModal from "../components/SellModal";
+
 
 const { height } = Dimensions.get("window");
 const Drawer = createDrawerNavigator();
@@ -160,8 +162,20 @@ const DashboardContent = ({ navigation }: any) => {
   );
 };
 
-const CustomDrawerContent = (props: any) => (
-  <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
+const CustomDrawerContent = (props: any) => {
+  const [isSellModalVisible, setSellModalVisible] = useState(false);
+
+  const openSellModal = () => {
+    props.navigation.closeDrawer(); // Close the drawer
+    setTimeout(() => {
+      setSellModalVisible(true); // Open the modal after the drawer is closed
+    }, 200); // Delay of 200ms (adjust as needed)
+  };
+  const closeSellModal = () => setSellModalVisible(false);
+
+  return (
+    <>
+      <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 32 }}>
     
       <DrawerItem
@@ -195,20 +209,29 @@ const CustomDrawerContent = (props: any) => (
         labelStyle={{ display: 'none' }} 
       />
       <DrawerItem
-        icon={() => (
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Image
-              source={require("../assets/images/icons/$.png")}
-              className="w-8 h-8"
-              resizeMode="contain"
-            />
-            <Text style={{ fontSize: 14, marginTop: 6, fontFamily: 'Poppins-SemiBold' }}>Sell</Text> 
-          </View>
-        )}
-        label=""
-        onPress={() => props.navigation.navigate("Sell")}
-        labelStyle={{ display: 'none' }} 
-      />
+            icon={() => (
+              <View style={{ flexDirection: "column", alignItems: "center" }}>
+                <Image
+                  source={require("../assets/images/icons/$.png")}
+                  className="w-8 h-8"
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 6,
+                    fontFamily: "Poppins-SemiBold",
+                  }}
+                >
+                  Sell
+                </Text>
+              </View>
+            )}
+            label=""
+            onPress={openSellModal} // Open modal instead of navigating
+            labelStyle={{ display: "none" }}
+          />
+          <SellModal visible={isSellModalVisible} onClose={closeSellModal} />
       <DrawerItem
         icon={() => (
           <View style={{ flexDirection: "column", alignItems: "center" }}>
@@ -256,7 +279,11 @@ const CustomDrawerContent = (props: any) => (
       />
     </View>
   </DrawerContentScrollView>
-);
+    </>
+  )
+
+  
+};
 
 
 const Specials = () => {

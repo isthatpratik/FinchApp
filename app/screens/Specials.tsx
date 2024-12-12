@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Slider } from "@miblanchard/react-native-slider";
 import { Picker } from "@react-native-picker/picker";
+import { BlurView } from "expo-blur";
 
 const { width } = Dimensions.get("window");
 
@@ -36,57 +37,82 @@ const SpecialsScreen = () => {
     // Handle apply logic here if needed
   };
 
+  // Example product data (to be fetched dynamically in the future)
+  const product = {
+    name: "LG Refrigerator",
+    image: require("../assets/images/fridge.png"),
+    originalPrice: 1150,
+    discountedPrice: 850,
+    location: "Mountain View, CA",
+    discount: "20% off",
+    condition: "Excellent",
+    listedDate: "17 Aug 2020",
+  };
+
   return (
-    <View className="flex-1 bg-white p-4">
+    <View className="flex-1 bg-[#F5F5F5] p-10">
       {/* Header */}
       <View className="flex-row justify-between items-center mb-4">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={25} color="#000" />
         </TouchableOpacity>
         <TouchableOpacity onPress={toggleModal}>
-          <Ionicons
-            name="filter"
-            size={25}
-            color={isModalVisible ? "#fff" : "#000"}
-            style={{ backgroundColor: isModalVisible ? "#000" : "transparent" }}
-          />
+          <Ionicons name="filter" size={25} />
         </TouchableOpacity>
       </View>
 
       {/* Content */}
-      <View className="bg-white rounded-lg shadow-md overflow-hidden">
+      <View className="bg-white rounded-1 border-2 border-black shadow-md overflow-hidden h-[75%] mt-16">
         <Image
-          source={require("../assets/images/fridge.png")}
-          className="w-full h-52"
+          source={product.image}
+          className="min-w-full max-w-full w-full self-center h-[65%]"
         />
-        <View className="p-4">
-          <Text className="text-lg font-bold mb-2">LG Refrigerator</Text>
-          <View className="flex-row items-center mb-2">
-            <Text className="text-sm text-gray-400 line-through mr-2">
-              $1150
+        <View className="p-6">
+          <View className="flex-row justify-between items-center mb-2 font-[PoppinsMedium]">
+            <Text className="font-[PoppinsSemiBold] text-[16px] flex-1">
+              {product.name}
             </Text>
-            <Text className="text-lg font-bold text-black">$850</Text>
+            <View className="flex-row items-center">
+              <Text className="text-gray-400 line-through mr-4 font-[PoppinsSemiBold] text-[16px]">
+                ${product.originalPrice}
+              </Text>
+              <Text className="font-[PoppinsSemiBold] text-[21px] text-black">
+                ${product.discountedPrice}
+              </Text>
+            </View>
           </View>
-          <Text className="text-sm text-black mb-1">
-            Location: <Text className="font-bold">Mountain View, CA</Text>
-          </Text>
-          <Text className="text-sm text-black mb-1">
-            Discount:{" "}
-            <Text className="bg-green-200 text-black px-1 rounded font-bold">
-              20% off
+
+          <View className="flex-col mb-2 gap-1">
+            <Text className="font-[PoppinsMedium] text-[14px] text-black mb-1">
+              Location:{" "}
+              <Text className="color-[#828282]">{product.location}</Text>
             </Text>
-          </Text>
-          <Text className="text-sm text-black mb-1">
-            Condition: <Text className="font-bold">Excellent</Text>
-          </Text>
-          <Text className="text-sm text-black">
-            Listed on: <Text className="font-bold">17 Aug 2020</Text>
-          </Text>
+            <View className="flex-row items-center mb-1">
+              <Text className="font-[PoppinsMedium] text-[14px] text-black">
+                Discount:{" "}
+              </Text>
+              <View className="bg-[#8FFF00] text-black border border-black px-2 rounded-1">
+                <Text className="text-black text-[14px] font-[PoppinsMedium]">
+                  {product.discount}
+                </Text>
+              </View>
+            </View>
+            <Text className="font-[PoppinsMedium] text-[14px] text-black">
+              Condition:{" "}
+              <Text className="color-[#828282]">{product.condition}</Text>
+            </Text>
+            <Text className="text-[14px] font-[PoppinsMedium] text-black">
+              Listed on:{" "}
+              <Text className="font-[PoppinsMedium] color-[#828282]">
+                {product.listedDate}
+              </Text>
+            </Text>
+          </View>
         </View>
       </View>
 
       {/* Footer */}
-      <TouchableOpacity className="bg-black py-4 rounded-lg mt-4 items-center">
+      <TouchableOpacity className="bg-black py-4 rounded-[2] mt-4 items-center">
         <Text className="text-white font-bold text-base">Know more</Text>
       </TouchableOpacity>
 
@@ -97,7 +123,12 @@ const SpecialsScreen = () => {
         animationType="fade"
         onRequestClose={toggleModal}
       >
-        <View style={styles.modalOverlay}>
+        <BlurView
+          intensity={10}
+          tint="systemChromeMaterialDark"
+          experimentalBlurMethod="dimezisBlurView"
+          style={styles.modalOverlay}
+        >
           <View style={styles.modalContainer}>
             {/* Title */}
             <Text style={styles.title}>Filter By</Text>
@@ -155,24 +186,33 @@ const SpecialsScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Discount Slider */}
-            <Text style={styles.label}>Discount</Text>
-            <Slider
-              value={sliderValues}
-              minimumValue={30}
-              maximumValue={100}
-              step={1}
-              onValueChange={handleSliderChange}
-              minimumTrackTintColor="#8FFF00"
-              maximumTrackTintColor="#BDBDBD"
-              trackStyle={styles.trackStyle}
-              thumbStyle={styles.thumbStyle}
-              animateTransitions={true}
-              animationType="spring"
-            />
-            <View style={styles.sliderValuesContainer}>
-              <Text style={styles.sliderValue}>${sliderValues[0]}</Text>
-              <Text style={styles.sliderValue}>${sliderValues[1]}</Text>
+            <Text style={styles.label}>Discount %</Text>
+            <View>
+              <Slider
+                value={sliderValues}
+                minimumValue={30}
+                maximumValue={100}
+                step={1}
+                onValueChange={handleSliderChange}
+                minimumTrackTintColor="#00F0FF"
+                maximumTrackTintColor="#BDBDBD"
+                trackStyle={styles.trackStyle}
+                thumbStyle={styles.thumbStyle}
+                animateTransitions={true}
+                animationType="spring"
+                renderThumbComponent={(index) => (
+                  <View>
+                    <View style={styles.thumbStyle} />
+                    <Text style={styles.thumbValue}>
+                      {Math.round(sliderValues[index])}
+                    </Text>
+                  </View>
+                )}
+              />
+              <View style={styles.sliderLabelsContainer}>
+                <Text style={styles.minMaxLabel}>30</Text>
+                <Text style={styles.minMaxLabel}>100</Text>
+              </View>
             </View>
 
             {/* Action Buttons */}
@@ -191,7 +231,7 @@ const SpecialsScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </BlurView>
       </Modal>
     </View>
   );
@@ -199,66 +239,74 @@ const SpecialsScreen = () => {
 
 const styles = StyleSheet.create({
   picker: {
-    height: 50,
     width: "100%",
+    fontSize: 12,
+    fontFamily: "PoppinsMedium",
+  },
+  placeholderText: {
+    fontSize: 10, // Decrease the font size here
+    color: "#BDBDBD", // Optional: set the color to differentiate from other items
   },
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", 
+    overflow: "hidden",
+    // backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
+    fontFamily: "PoppinsMedium",
     marginTop: 100,
     width: width * 0.7,
     backgroundColor: "white",
     borderRadius: 2,
     borderWidth: 2,
-    padding: 16,
+    padding: 20,
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "PoppinsSemiBold",
     textAlign: "center",
-    marginBottom: 16,
+    marginBottom: 12,
   },
   label: {
-    fontSize: 14,
-    fontWeight: "bold",
+    fontSize: 12,
+    fontFamily: "PoppinsSemiBold",
     marginBottom: 8,
-    color: "#555",
   },
   dropdown: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
+    fontSize: 12,
+    borderWidth: 1.5,
+    borderRadius: 1,
     marginBottom: 16,
   },
   optionContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 16,
+    gap: 8,
   },
   optionButton: {
     flex: 1,
     paddingVertical: 10,
-    marginHorizontal: 5,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
+    borderWidth: 1.5,
+    borderColor: "#BDBDBD",
+    borderRadius: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   selectedButton: {
-    backgroundColor: "#000",
     borderColor: "#000",
   },
   optionText: {
     color: "#000",
-    fontWeight: "bold",
+    fontFamily: "PoppinsMedium",
+    fontSize: 12,
   },
   selectedText: {
-    color: "#fff",
+    color: "#000",
+    fontFamily: "PoppinsMedium",
+    fontSize: 12,
   },
   sliderValuesContainer: {
     flexDirection: "row",
@@ -292,32 +340,56 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     elevation: 2,
   },
+  thumbContainer: {
+    position: "absolute",
+    bottom: 30, // Position the value below the thumb
+    alignItems: "center",
+  },
+  thumbValue: {
+    position: "absolute",
+    top: 30, // Position below the thumb
+    alignSelf: "center",
+    fontSize: 12,
+    fontFamily: "PoppinsMedium",
+    color: "#000",
+  },
+  sliderLabelsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  minMaxLabel: {
+    fontSize: 12,
+    fontFamily: "PoppinsMedium",
+    color: "#BDBDBD",
+  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 16,
+    gap: 8,
   },
   actionButton: {
     flex: 1,
     paddingVertical: 12,
-    marginHorizontal: 8,
-    borderRadius: 4,
+    borderRadius: 2,
     justifyContent: "center",
     alignItems: "center",
   },
   cancelButton: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "transparent",
   },
   cancelText: {
     color: "#000",
-    fontWeight: "bold",
+    fontFamily: "PoppinsMedium",
+    fontSize: 12,
   },
   applyButton: {
     backgroundColor: "#000",
   },
   applyText: {
     color: "#fff",
-    fontWeight: "bold",
+    fontFamily: "PoppinsMedium",
+    fontSize: 12,
   },
 });
 
