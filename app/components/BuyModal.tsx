@@ -9,21 +9,13 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 
-interface SellModalProps {
+interface BuyModalProps {
   visible: boolean;
   onClose: () => void;
 }
 
-const SellModal: React.FC<SellModalProps> = ({ visible, onClose }) => {
-  const router = useRouter();
-
-  const handleRegularSell = () => {
-    onClose(); // Close the modal
-    router.navigate('/screens/Sell/Regular/SelectProductScreen');
-  };
-
+const BuyModal: React.FC<BuyModalProps> = ({ visible, onClose }) => {
   return (
     <Modal
       transparent={true}
@@ -49,16 +41,16 @@ const SellModal: React.FC<SellModalProps> = ({ visible, onClose }) => {
             <Text style={styles.modalTitle}>Choose an Option</Text>
 
             {/* Regular Sell Button */}
-            <TouchableOpacity style={styles.optionButtonRegular} onPress={handleRegularSell}>
+            <TouchableOpacity style={styles.optionButtonRegular}>
               <Image
                 source={require('../assets/images/icons/regular-sell.png')}
                 style={styles.optionIcon}
                 resizeMode='contain'
               />
               <View style={styles.optionTextContainer}>
-                <Text style={styles.optionTitle}>Regular Sell</Text>
+                <Text style={styles.optionTitle}>Regular Buy</Text>
                 <Text style={styles.optionDescription}>
-                  A standard way to sell your products.
+                    Buy products from the regular marketplace.
                 </Text>
               </View>
             </TouchableOpacity>
@@ -71,9 +63,9 @@ const SellModal: React.FC<SellModalProps> = ({ visible, onClose }) => {
                 resizeMode='contain'
               />
               <View style={styles.optionTextContainer}>
-                <Text style={styles.optionTitle}>Fast-track Sell</Text>
+                <Text style={styles.optionTitle}>Finch Buy</Text>
                 <Text style={styles.optionDescription}>
-                  Sell your products faster with priority listing.
+                    A unique & customized buying experience.
                 </Text>
               </View>
             </TouchableOpacity>
@@ -163,4 +155,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SellModal;
+export default BuyModal;

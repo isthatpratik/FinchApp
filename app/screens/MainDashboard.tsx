@@ -17,7 +17,8 @@ import AddProductDetailsScreen from "./AddProductDetailsScreen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SpecialsScreen from "./Specials";
 import SellModal from "../components/SellModal";
-
+import BuyModal from "../components/BuyModal";
+import SelectProductScreen from "./Sell/Regular/SelectProductScreen";
 
 const { height } = Dimensions.get("window");
 const Drawer = createDrawerNavigator();
@@ -54,7 +55,7 @@ const MainDashboardScreen: React.FC = () => {
           width: Dimensions.get("window").width * 0.4,
           borderTopRightRadius: 0,
           borderBottomRightRadius: 0,
-          borderRightWidth: 3.5, 
+          borderRightWidth: 3.5,
         },
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
@@ -64,6 +65,7 @@ const MainDashboardScreen: React.FC = () => {
         name="AddProductDetailsScreen"
         component={AddProductDetailsScreen}
       />
+      <Drawer.Screen name="SelectProductScreen" component={SelectProductScreen} />
       <Drawer.Screen name="Specials" component={Specials} />
       <Drawer.Screen name="Buy" component={BuyScreen} />
       <Drawer.Screen name="Sell" component={SellScreen} />
@@ -164,6 +166,15 @@ const DashboardContent = ({ navigation }: any) => {
 
 const CustomDrawerContent = (props: any) => {
   const [isSellModalVisible, setSellModalVisible] = useState(false);
+  const [isBuyModalVisible, setBuyModalVisible] = useState(false);
+
+  const openBuyModal = () => {
+    props.navigation.closeDrawer();
+    setTimeout(() => {
+      setBuyModalVisible(true);
+    }, 200);
+  };
+  const closeBuyModal = () => setBuyModalVisible(false);
 
   const openSellModal = () => {
     props.navigation.closeDrawer(); // Close the drawer
@@ -176,39 +187,62 @@ const CustomDrawerContent = (props: any) => {
   return (
     <>
       <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 32 }}>
-    
-      <DrawerItem
-        icon={() => (
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Image
-              source={require("../assets/images/icons/specials.png")}
-              resizeMode="contain"
-              className="w-8 h-8"
-            />
-            <Text style={{ fontSize: 14, marginTop: 6, fontFamily: 'Poppins-SemiBold' }}>Specials</Text>
-          </View>
-        )}
-        label="" 
-        onPress={() => props.navigation.navigate("Specials")}
-        labelStyle={{ display: 'none' }}
-      />
-      <DrawerItem
-        icon={() => (
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Image
-              source={require("../assets/images/icons/Buy.png")}
-              className="w-8 h-8"
-              resizeMode="contain"
-            />
-            <Text style={{ fontSize: 14, marginTop: 6, fontFamily: 'Poppins-SemiBold' }}>Buy</Text> 
-          </View>
-        )}
-        label=""
-        onPress={() => props.navigation.navigate("Buy")}
-        labelStyle={{ display: 'none' }} 
-      />
-      <DrawerItem
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 32,
+          }}
+        >
+          <DrawerItem
+            icon={() => (
+              <View style={{ flexDirection: "column", alignItems: "center" }}>
+                <Image
+                  source={require("../assets/images/icons/specials.png")}
+                  resizeMode="contain"
+                  className="w-8 h-8"
+                />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 6,
+                    fontFamily: "Poppins-SemiBold",
+                  }}
+                >
+                  Specials
+                </Text>
+              </View>
+            )}
+            label=""
+            onPress={() => props.navigation.navigate("Specials")}
+            labelStyle={{ display: "none" }}
+          />
+          <DrawerItem
+            icon={() => (
+              <View style={{ flexDirection: "column", alignItems: "center" }}>
+                <Image
+                  source={require("../assets/images/icons/Buy.png")}
+                  className="w-8 h-8"
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 6,
+                    fontFamily: "Poppins-SemiBold",
+                  }}
+                >
+                  Buy
+                </Text>
+              </View>
+            )}
+            label=""
+            onPress={openBuyModal}
+            labelStyle={{ display: "none" }}
+          />
+          <BuyModal visible={isBuyModalVisible} onClose={closeBuyModal} />
+          <DrawerItem
             icon={() => (
               <View style={{ flexDirection: "column", alignItems: "center" }}>
                 <Image
@@ -232,64 +266,83 @@ const CustomDrawerContent = (props: any) => {
             labelStyle={{ display: "none" }}
           />
           <SellModal visible={isSellModalVisible} onClose={closeSellModal} />
-      <DrawerItem
-        icon={() => (
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Image
-              source={require("../assets/images/icons/Profile.png")}
-              className="w-8 h-8"
-              resizeMode="contain"
-            />
-            <Text style={{ fontSize: 14, marginTop: 6, fontFamily: 'Poppins-SemiBold' }}>Profile</Text> 
-          </View>
-        )}
-        label="" 
-        onPress={() => props.navigation.navigate("ProfilePage")}
-        labelStyle={{ display: 'none' }}
-      />
-      <DrawerItem
-        icon={() => (
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Image
-              source={require("../assets/images/icons/Settings.png")}
-              className="w-8 h-8 aspect-auto"
-              resizeMode="contain"
-            />
-            <Text style={{ fontSize: 14, marginTop: 6, fontFamily: 'Poppins-SemiBold' }}>Settings</Text> 
-          </View>
-        )}
-        label="" 
-        onPress={() => props.navigation.navigate("Settings")}
-        labelStyle={{ display: 'none' }} 
-      />
-      <DrawerItem
-        icon={() => (
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <Image
-              source={require("../assets/images/icons/Help.png")}
-              className="w-8 h-8"
-              resizeMode="contain"
-            />
-            <Text style={{ fontSize: 14, marginTop: 6, fontFamily: 'Poppins-SemiBold' }}>Help</Text> 
-          </View>
-        )}
-        label="" 
-        onPress={() => props.navigation.navigate("Help")}
-        labelStyle={{ display: 'none' }} 
-      />
-    </View>
-  </DrawerContentScrollView>
+          <DrawerItem
+            icon={() => (
+              <View style={{ flexDirection: "column", alignItems: "center" }}>
+                <Image
+                  source={require("../assets/images/icons/Profile.png")}
+                  className="w-8 h-8"
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 6,
+                    fontFamily: "Poppins-SemiBold",
+                  }}
+                >
+                  Profile
+                </Text>
+              </View>
+            )}
+            label=""
+            onPress={() => props.navigation.navigate("ProfilePage")}
+            labelStyle={{ display: "none" }}
+          />
+          <DrawerItem
+            icon={() => (
+              <View style={{ flexDirection: "column", alignItems: "center" }}>
+                <Image
+                  source={require("../assets/images/icons/Settings.png")}
+                  className="w-8 h-8 aspect-auto"
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 6,
+                    fontFamily: "Poppins-SemiBold",
+                  }}
+                >
+                  Settings
+                </Text>
+              </View>
+            )}
+            label=""
+            onPress={() => props.navigation.navigate("Settings")}
+            labelStyle={{ display: "none" }}
+          />
+          <DrawerItem
+            icon={() => (
+              <View style={{ flexDirection: "column", alignItems: "center" }}>
+                <Image
+                  source={require("../assets/images/icons/Help.png")}
+                  className="w-8 h-8"
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    fontSize: 14,
+                    marginTop: 6,
+                    fontFamily: "Poppins-SemiBold",
+                  }}
+                >
+                  Help
+                </Text>
+              </View>
+            )}
+            label=""
+            onPress={() => props.navigation.navigate("Help")}
+            labelStyle={{ display: "none" }}
+          />
+        </View>
+      </DrawerContentScrollView>
     </>
-  )
-
-  
+  );
 };
 
-
 const Specials = () => {
-  return (
-    <SpecialsScreen />
-  )
+  return <SpecialsScreen />;
 };
 
 const BuyScreen = () => (

@@ -7,6 +7,7 @@ import ProfilePage from "../screens/Profile";
 import CameraScreen from "../screens/CameraScreen";
 import AddProductDetailsScreen from "../screens/AddProductDetailsScreen";
 import AdditionalDetailsScreen from "../screens/AdditionalDetailsScreen";
+import SelectProductScreen from "../screens/Sell/Regular/SelectProductScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -16,6 +17,7 @@ const DashboardDrawer = () => (
   <Drawer.Navigator initialRouteName="MainDashboard">
     <Drawer.Screen name="MainDashboard" component={MainDashboardScreen} />
     <Drawer.Screen name="ProfilePage" component={ProfilePage} />
+    <Drawer.Screen name="SelectProductScreen" component={SelectProductScreen} />
   </Drawer.Navigator>
 );
 
@@ -45,6 +47,11 @@ const AppNavigator = () => (
     <Stack.Screen
       name="AdditionalDetailsScreen"
       component={AdditionalDetailsScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="SelectProductScreen"
+      component={SelectProductScreen}
       options={{ headerShown: false }}
     />
   </Stack.Navigator>
