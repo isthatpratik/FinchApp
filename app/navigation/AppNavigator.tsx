@@ -8,6 +8,7 @@ import CameraScreen from "../screens/CameraScreen";
 import AddProductDetailsScreen from "../screens/AddProductDetailsScreen";
 import AdditionalDetailsScreen from "../screens/AdditionalDetailsScreen";
 import SelectProductScreen from "../screens/Sell/Regular/SelectProductScreen";
+import SellingCriteria from "../screens/Sell/Regular/SellingCriteria";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -52,6 +53,11 @@ const AppNavigator = () => (
     <Stack.Screen
       name="SelectProductScreen"
       component={SelectProductScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="SellingCritera"
+      component={SellingCriteria}
       options={{ headerShown: false }}
     />
   </Stack.Navigator>

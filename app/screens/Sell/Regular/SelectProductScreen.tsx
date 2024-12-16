@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { useRouter } from "expo-router";
 
 type Product = {
   id: string;
@@ -17,10 +17,7 @@ type Product = {
   };
 };
 
-type SelectProductScreenProps = {
-  navigation: StackNavigationProp<any, any>;
-};
-
+// Mock product list
 const products: Product[] = [
   {
     id: "1",
@@ -60,40 +57,53 @@ const products: Product[] = [
   },
 ];
 
-const SelectProductScreen: React.FC<SelectProductScreenProps> = ({
-  navigation,
-}) => {
+const SelectProductScreen: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSelect = (id: string) => {
-    setSelectedProduct((prev) => (prev === id ? null : id)); // Toggle selection
+    setSelectedProduct((prev) => (prev === id ? null : id));
   };
 
   const renderProductCard = ({ item }: { item: Product }) => (
     <TouchableOpacity
-      className={`flex-row items-center bg-white rounded-2 mb-6 mr-6 ml-6 p-6 shadow ${
-        selectedProduct === item.id ? "border-2 border-black" : "border border-gray-200"
+      className={`flex-row items-center bg-white rounded-[2px] mb-6 mx-8 py-3.5 px-6 ${
+        selectedProduct === item.id
+          ? "border-[1.5px] border-r-[3.5px] border-b-[3.5px] border-black"
+          : "border border-[#BDBDBD]"
       }`}
       onPress={() => handleSelect(item.id)}
     >
-      <Image source={item.icon} className="w-12 h-12 mr-4" resizeMode="contain"/>
+      <Image
+        source={item.icon}
+        className="w-16 h-16 mr-4"
+        resizeMode="contain"
+      />
       <View className="flex-1">
-        <Text className="text-lg font-bold">{item.title}</Text>
-        <Text className="text-gray-600">{item.location}</Text>
-        <Text className="text-gray-600">Purchased: {item.purchasedDate}</Text>
-        <Text className="text-gray-600">Expected SP: {item.expectedSP}</Text>
+        <Text className="text-[14px] font-[PoppinsSemiBold]">{item.title}</Text>
+        <Text className="text-gray-600 font-[PoppinsMedium] text-[12px]">
+          {item.location}
+        </Text>
+        <Text className="text-gray-600 font-[PoppinsMedium] text-[12px]">
+          Purchased: {item.purchasedDate}
+        </Text>
+        <Text className="text-gray-600 font-[PoppinsMedium] text-[12px]">
+          Expected SP: {item.expectedSP}
+        </Text>
         <View className="flex-row items-center mt-1">
-          <Text className="font-semibold">Warranty: </Text>
+          <Text className="font-[PoppinsMedium] text-[12px]">Warranty: </Text>
           <View
-            className="rounded px-2 py-1 ml-2"
+            className="px-2 py-1 border"
             style={{ backgroundColor: item.warranty.color }}
           >
-            <Text className="text-white text-xs font-bold">{item.warranty.text}</Text>
+            <Text className="text-black font-[PoppinsMedium] text-[12px]">
+              {item.warranty.text}
+            </Text>
           </View>
         </View>
       </View>
 
-      {/* Ticked Checkbox at the top right */}
+      {/* Ticked Checkbox */}
       {selectedProduct === item.id && (
         <View className="absolute top-2 right-2 p-2">
           <AntDesign name="checksquare" size={24} color="black" />
@@ -104,30 +114,46 @@ const SelectProductScreen: React.FC<SelectProductScreenProps> = ({
 
   return (
     <View className="flex-1 bg-[#F5F5F5]">
-      <View className="flex-row justify-between items-center px-6 py-10">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      {/* Header */}
+      <View className="flex-row justify-between items-center px-8 py-6 mt-6">
+        <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text className="text-lg font-bold">Select a product</Text>
-        <TouchableOpacity onPress={() => console.log("Close pressed")}>
+        <Text className="text-[20px] font-[PoppinsSemiBold]">
+          Select a product
+        </Text>
+        <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="close" size={24} color="black" />
         </TouchableOpacity>
       </View>
+
+      {/* Product List */}
       <FlatList
         data={products}
         renderItem={renderProductCard}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{ padding: 16 }}
+        contentContainerStyle={{ paddingVertical: 16 }}
       />
-      <TouchableOpacity
-        className={`bg-black py-4 mx-4 rounded-[1] ${
-          selectedProduct ? "opacity-100" : "opacity-50"
-        }`}
-        onPress={() => navigation.navigate("NextScreen")}
-        disabled={!selectedProduct}
-      >
-        <Text className="text-white text-center">Continue</Text>
-      </TouchableOpacity>
+
+      {/* Bottom Continue Button */}
+      <View className="px-8 py-4">
+        <TouchableOpacity
+          className={`bg-black py-6 px-16 mt-2 rounded-[2px] ${
+            selectedProduct ? "opacity-100" : "opacity-50"
+          }`}
+          onPress={() =>
+            router.push({
+              pathname: "/screens/Sell/Regular/SellingCriteria",
+              params: { productId: selectedProduct },
+            })
+          }
+          disabled={!selectedProduct}
+        >
+          <Text className="text-white text-center font-[PoppinsSemiBold] text-[13px]">
+            Continue
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
