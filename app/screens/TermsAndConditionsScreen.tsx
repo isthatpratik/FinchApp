@@ -8,7 +8,7 @@ const TermsAndConditionsScreen = () => {
 
   const handleAccept = () => {
     console.log("Terms Accepted");
-    router.push("/screens/MainDashboard");
+    router.navigate("/screens/MainDashboard");
   };
 
   const handleDecline = () => {

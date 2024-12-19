@@ -98,24 +98,22 @@ const AdditionalSellingCriteria = () => {
           </View>
 
           {/* Selling Option */}
-          <Text className="text-[16px] font-semibold text-gray-900 mb-2">
+          <Text className="text-[16px] font-[PoppinsSemiBold] mb-2">
             Choose a selling option
           </Text>
           <View className="flex-row mb-4">
             {["Pick-up", "Delivery"].map((option) => (
               <TouchableOpacity
                 key={option}
-                className={`flex-1 p-3 mx-1 rounded-lg border ${
+                className={`flex-1 p-4 mx-1 rounded-[2px] border-[1.5px] ${
                   sellingOption === option
-                    ? "bg-black"
-                    : "bg-gray-200 border-gray-300"
+                    ? "bg-white"
+                    : "bg-transparent border-[#BDBDBD]"
                 }`}
                 onPress={() => setSellingOption(option)}
               >
                 <Text
-                  className={`text-center ${
-                    sellingOption === option ? "text-white" : "text-black"
-                  }`}
+                  className="text-black text-center font-[PoppinsMedium]"
                 >
                   {option}
                 </Text>
@@ -124,7 +122,7 @@ const AdditionalSellingCriteria = () => {
           </View>
 
           {/* Add a Description */}
-          <Text className="text-[16px] font-semibold text-gray-900 mb-2">
+          <Text className="text-[16px] font-[PoppinsSemiBold] mb-2">
             Add a description (140 words)
           </Text>
           <TextInput
@@ -132,30 +130,28 @@ const AdditionalSellingCriteria = () => {
             value={description}
             onChangeText={setDescription}
             multiline
-            numberOfLines={4}
+            numberOfLines={6}
             maxLength={140}
-            className="border border-gray-300 p-3 rounded-lg bg-white mb-4 text-gray-800"
+            className="font-[PoppinsMedium] border-[1.5px] p-5 rounded-[2px] bg-white mb-4 text-gray-800"
           />
 
           {/* Payment Method */}
-          <Text className="text-[16px] font-semibold text-gray-900 mb-2">
+          <Text className="text-[16px] font-[PoppinsSemiBold] mb-2">
             Preferred payment method
           </Text>
           <View className="flex-row mb-4">
             {["Cash", "Bank Transfer"].map((method) => (
               <TouchableOpacity
                 key={method}
-                className={`flex-1 p-3 mx-1 rounded-lg border ${
+                className={`flex-1 p-4 mx-1 rounded-[2px] border-[1.5px] ${
                   paymentMethod === method
-                    ? "bg-black"
-                    : "bg-gray-200 border-gray-300"
+                    ? "bg-white"
+                    : "bg-transparent border-[#BDBDBD]"
                 }`}
                 onPress={() => setPaymentMethod(method)}
               >
                 <Text
-                  className={`text-center ${
-                    paymentMethod === method ? "text-white" : "text-black"
-                  }`}
+                  className="text-center font-[PoppinsMedium]"
                 >
                   {method}
                 </Text>
@@ -164,24 +160,22 @@ const AdditionalSellingCriteria = () => {
           </View>
 
           {/* Price Negotiable */}
-          <Text className="text-[16px] font-semibold text-gray-900 mb-2">
+          <Text className="text-[16px] font-[PoppinsSemiBold] mb-2">
             Is the price negotiable?
           </Text>
           <View className="flex-row mb-4">
             {["Yes", "No"].map((negotiable) => (
               <TouchableOpacity
                 key={negotiable}
-                className={`flex-1 p-3 mx-1 rounded-lg border ${
+                className={`flex-1 p-4 mx-1 rounded-[2px] border-[1.5px] ${
                   isNegotiable === negotiable
-                    ? "bg-black"
-                    : "bg-gray-200 border-gray-300"
+                    ? "bg-white"
+                    : "bg-transparent border-[#BDBDBD]"
                 }`}
                 onPress={() => setIsNegotiable(negotiable)}
               >
                 <Text
-                  className={`text-center ${
-                    isNegotiable === negotiable ? "text-white" : "text-black"
-                  }`}
+                  className="text-center font-[PoppinsMedium]"
                 >
                   {negotiable}
                 </Text>
@@ -193,7 +187,7 @@ const AdditionalSellingCriteria = () => {
         {/* Bottom Submit Button */}
         <View className="px-8 pb-4">
           <TouchableOpacity
-            className="bg-black py-6 rounded-lg"
+            className="bg-black py-6 rounded-[2px]"
             onPress={() => console.log("Continue pressed")}
           >
             <Text className="text-white text-center font-[PoppinsSemiBold] text-[14px]">
