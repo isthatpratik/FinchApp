@@ -91,7 +91,7 @@ const AdditionalDetailsScreen: React.FC = () => {
             name="close"
             size={25}
             color="#000"
-            onPress={() => router.push("/screens/MainDashboard")}
+            onPress={() => router.dismissTo("/screens/MainDashboard")}
           />
         </View>
       </LinearGradient>

@@ -10,6 +10,7 @@ import AdditionalDetailsScreen from "../screens/AdditionalDetailsScreen";
 import SelectProductScreen from "../screens/Sell/Regular/SelectProductScreen";
 import SellingCriteria from "../screens/Sell/Regular/SellingCriteria";
 import AdditionalSellingCriteria from "../screens/Sell/Regular/AdditionalSellingCriteria";
+import FasttrackSelectScreen from "../screens/Sell/Fast-track/FasttrackSelectScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -64,6 +65,11 @@ const AppNavigator = () => (
     <Stack.Screen
       name="AdditionalSellingCritera"
       component={AdditionalSellingCriteria}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="FasttrackSelectScreen"
+      component={FasttrackSelectScreen}
       options={{ headerShown: false }}
     />
   </Stack.Navigator>

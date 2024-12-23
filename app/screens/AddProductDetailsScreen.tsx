@@ -31,7 +31,7 @@ const AddProductDetailsScreen: React.FC = () => {
   };
 
   const navigateToDashboard = () => {
-    router.push("/screens/MainDashboard");
+    router.dismissTo("/screens/MainDashboard");
   };
 
   return (

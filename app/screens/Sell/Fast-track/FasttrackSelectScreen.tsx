@@ -57,7 +57,7 @@ const products: Product[] = [
   },
 ];
 
-const SelectProductScreen: React.FC = () => {
+const FasttrackSelectScreen: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const router = useRouter();
 
@@ -143,7 +143,7 @@ const SelectProductScreen: React.FC = () => {
           }`}
           onPress={() =>
             router.push({
-              pathname: "/screens/Sell/Regular/SellingCriteria",
+              pathname: "/screens/Sell/Fast-track/FasttrackSellingCriteria",
               params: { productId: selectedProduct },
             })
           }
@@ -158,4 +158,4 @@ const SelectProductScreen: React.FC = () => {
   );
 };
 
-export default SelectProductScreen;
+export default FasttrackSelectScreen;

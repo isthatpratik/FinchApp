@@ -24,6 +24,11 @@ const SellModal: React.FC<SellModalProps> = ({ visible, onClose }) => {
     router.navigate('/screens/Sell/Regular/SelectProductScreen');
   };
 
+  const handleFastTrackSell = () => {
+    onClose(); // Close the modal
+    router.navigate('/screens/Sell/Fast-track/FasttrackSelectScreen');
+  }
+
   return (
     <Modal
       transparent={true}
@@ -64,7 +69,7 @@ const SellModal: React.FC<SellModalProps> = ({ visible, onClose }) => {
             </TouchableOpacity>
 
             {/* Fast-track Sell Button */}
-            <TouchableOpacity style={styles.optionButtonFastTrack}>
+            <TouchableOpacity style={styles.optionButtonFastTrack} onPress={handleFastTrackSell}>
               <Image
                 source={require('../assets/images/icons/fast-track-sell.png')}
                 style={styles.optionIcon}

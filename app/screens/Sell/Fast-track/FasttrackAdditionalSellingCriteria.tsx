@@ -21,7 +21,7 @@ type Params = {
   photos?: string[]; // optional array of photos
 };
 
-const AdditionalSellingCriteria = () => {
+const FasttrackAdditionalSellingCriteria = () => {
   const router = useRouter();
   const params = useLocalSearchParams<Params>(); // Use the Params type
 
@@ -49,6 +49,7 @@ const AdditionalSellingCriteria = () => {
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
+        
         <TouchableOpacity onPress={() => router.dismissTo("/screens/MainDashboard")}>
           <Ionicons name="close" size={24} color="black" />
         </TouchableOpacity>
@@ -77,7 +78,7 @@ const AdditionalSellingCriteria = () => {
                   Purchased:
                 </Text>
                 <Text className="text-[12px] text-[#828282] font-[PoppinsMedium]">
-                   {purchasedDate}
+                  {purchasedDate}
                 </Text>
               </Text>
               <View className="flex-row items-center mt-2">
@@ -95,7 +96,7 @@ const AdditionalSellingCriteria = () => {
           </View>
 
           {/* Selling Option */}
-          <Text className="text-[16px] font-[PoppinsSemiBold] mb-2">
+          <Text className="text-[16px] font-[PoppinsMedium] mb-2">
             Choose a selling option
           </Text>
           <View className="flex-row mb-4">
@@ -119,8 +120,9 @@ const AdditionalSellingCriteria = () => {
           </View>
 
           {/* Add a Description */}
-          <Text className="text-[16px] font-[PoppinsSemiBold] mb-2">
-            Add a description (140 words)
+          <Text className="text-[16px] font-[PoppinsMedium] mb-2">
+            Add a description 
+            <Text className="text-[10px] font-[PoppinsMedium] color-[#828282]"> (140 words)</Text>
           </Text>
           <TextInput
             placeholder="Type a description of your product"
@@ -133,7 +135,7 @@ const AdditionalSellingCriteria = () => {
           />
 
           {/* Payment Method */}
-          <Text className="text-[16px] font-[PoppinsSemiBold] mb-2">
+          <Text className="text-[16px] font-[PoppinsMedium] mb-2">
             Preferred payment method
           </Text>
           <View className="flex-row mb-4">
@@ -157,7 +159,7 @@ const AdditionalSellingCriteria = () => {
           </View>
 
           {/* Price Negotiable */}
-          <Text className="text-[16px] font-[PoppinsSemiBold] mb-2">
+          <Text className="text-[16px] font-[PoppinsMedium] mb-2">
             Is the price negotiable?
           </Text>
           <View className="flex-row mb-4">
@@ -185,7 +187,7 @@ const AdditionalSellingCriteria = () => {
         <View className="px-8 pb-4">
           <TouchableOpacity className="bg-black py-6 rounded-[2px]">
             <Text className="text-white text-center font-[PoppinsSemiBold] text-[14px]">
-              List the product
+              List the Product
             </Text>
           </TouchableOpacity>
         </View>
@@ -196,4 +198,4 @@ const AdditionalSellingCriteria = () => {
   );
 };
 
-export default AdditionalSellingCriteria;
+export default FasttrackAdditionalSellingCriteria;
