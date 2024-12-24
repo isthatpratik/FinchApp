@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 interface BuyModalProps {
   visible: boolean;
@@ -16,6 +17,13 @@ interface BuyModalProps {
 }
 
 const BuyModal: React.FC<BuyModalProps> = ({ visible, onClose }) => {
+  const router = useRouter();
+
+  const handleRegularBuy = () => {
+    onClose(); // Close the modal
+    router.navigate('/screens/Buy/Regular/BuyScreen');
+  };
+
   return (
     <Modal
       transparent={true}
@@ -41,7 +49,7 @@ const BuyModal: React.FC<BuyModalProps> = ({ visible, onClose }) => {
             <Text style={styles.modalTitle}>Choose an Option</Text>
 
             {/* Regular Sell Button */}
-            <TouchableOpacity style={styles.optionButtonRegular}>
+            <TouchableOpacity style={styles.optionButtonRegular} onPress={handleRegularBuy}>
               <Image
                 source={require('../assets/images/icons/regular-sell.png')}
                 style={styles.optionIcon}

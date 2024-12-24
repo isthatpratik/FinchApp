@@ -252,7 +252,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     overflow: "hidden",
-    // backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
     fontFamily: "PoppinsMedium",
