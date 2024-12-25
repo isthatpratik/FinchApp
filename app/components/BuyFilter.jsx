@@ -112,7 +112,7 @@ const BuyFilter = ({ visible, onClose }) => {
               maximumValue={80}
               step={1}
               thumbTintColor="#1EB1FC"
-              minimumTrackTintColor="#1EB1FC"
+              minimumTrackTintColor="#8FFF00"
               maximumTrackTintColor="#d3d3d3"
               trackStyle={styles.trackStyle}
               thumbStyle={styles.thumbStyle}

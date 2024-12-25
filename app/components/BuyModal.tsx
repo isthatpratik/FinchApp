@@ -24,6 +24,11 @@ const BuyModal: React.FC<BuyModalProps> = ({ visible, onClose }) => {
     router.navigate('/screens/Buy/Regular/BuyScreen');
   };
 
+  const handleFinchBuy = () => {
+    onClose(); // Close the modal
+    router.navigate('/screens/Buy/FinchBuy/BuyDetails');
+  };
+
   return (
     <Modal
       transparent={true}
@@ -63,8 +68,8 @@ const BuyModal: React.FC<BuyModalProps> = ({ visible, onClose }) => {
               </View>
             </TouchableOpacity>
 
-            {/* Fast-track Sell Button */}
-            <TouchableOpacity style={styles.optionButtonFastTrack}>
+            {/* Finch Buy Button */}
+            <TouchableOpacity style={styles.optionButtonFastTrack} onPress={handleFinchBuy}>
               <Image
                 source={require('../assets/images/icons/fast-track-sell.png')}
                 style={styles.optionIcon}

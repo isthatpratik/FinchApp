@@ -17,5 +17,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-, "app/components/BuyFilter.jsx"  ]
+, "app/components/BuyFilter.jsx", "app/screens/Buy/Regular/BuyScreen.jsx"  ]
 }
