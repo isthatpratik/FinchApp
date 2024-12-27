@@ -19,8 +19,10 @@ import SpecialsScreen from "./Specials";
 import SellModal from "../components/SellModal";
 import BuyModal from "../components/BuyModal";
 import SelectProductScreen from "./Sell/Regular/SelectProductScreen";
+import Settings from "./Settings";
+import ExtendWarranty from "./ExtendWarranty/ExtendWarrantyScreen";
 
-const { height } = Dimensions.get("window");
+
 const Drawer = createDrawerNavigator();
 
 const MainDashboardScreen: React.FC = () => {
@@ -67,8 +69,6 @@ const MainDashboardScreen: React.FC = () => {
       />
       <Drawer.Screen name="SelectProductScreen" component={SelectProductScreen} />
       <Drawer.Screen name="Specials" component={Specials} />
-      <Drawer.Screen name="Buy" component={BuyScreen} />
-      <Drawer.Screen name="Sell" component={SellScreen} />
       <Drawer.Screen name="ProfilePage" component={ProfilePage} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Help" component={HelpScreen} />
@@ -345,28 +345,13 @@ const Specials = () => {
   return <SpecialsScreen />;
 };
 
-const BuyScreen = () => (
-  <View className="flex-1 justify-center items-center">
-    <Text className="text-xl font-[Poppins-SemiBold]">Buy Screen</Text>
-  </View>
-);
+const SettingsScreen = () => {
+  return <Settings />;
+};
 
-const SellScreen = () => (
-  <View className="flex-1 justify-center items-center">
-    <Text className="text-xl font-[Poppins-SemiBold]">Sell Screen</Text>
-  </View>
-);
-
-const SettingsScreen = () => (
-  <View className="flex-1 justify-center items-center">
-    <Text className="text-xl font-[Poppins-SemiBold]">Settings Screen</Text>
-  </View>
-);
-
-const HelpScreen = () => (
-  <View className="flex-1 justify-center items-center">
-    <Text className="text-xl font-[Poppins-SemiBold]">Help Screen</Text>
-  </View>
-);
+const HelpScreen = () => {
+  return <ExtendWarranty />;
+};
+  
 
 export default MainDashboardScreen;
