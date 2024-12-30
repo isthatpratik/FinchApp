@@ -21,6 +21,7 @@ import BuyModal from "../components/BuyModal";
 import SelectProductScreen from "./Sell/Regular/SelectProductScreen";
 import Settings from "./Settings";
 import ExtendWarranty from "./ExtendWarranty/ExtendWarrantyScreen";
+import NotificationModal from "../components/NotificationModal";
 
 
 const Drawer = createDrawerNavigator();
@@ -49,35 +50,53 @@ const MainDashboardScreen: React.FC = () => {
   }
 
   return (
-    <Drawer.Navigator
-      initialRouteName="MainDashboard"
-      screenOptions={{
-        headerShown: false,
-        drawerStyle: {
-          width: Dimensions.get("window").width * 0.4,
-          borderTopRightRadius: 0,
-          borderBottomRightRadius: 0,
-          borderRightWidth: 3.5,
-        },
-      }}
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
-    >
-      <Drawer.Screen name="MainDashboard" component={DashboardContent} />
-      <Drawer.Screen
-        name="AddProductDetailsScreen"
-        component={AddProductDetailsScreen}
+    <SafeAreaView className="flex-1 bg-white">
+      <LinearGradient
+        colors={["#FFEE00", "#00F0FF"]}
+        className="absolute top-0 left-0 right-0 bottom-0"
+        start={{ x: 0.5, y: 0.985 }}
       />
-      <Drawer.Screen name="SelectProductScreen" component={SelectProductScreen} />
-      <Drawer.Screen name="Specials" component={Specials} />
-      <Drawer.Screen name="ProfilePage" component={ProfilePage} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} />
-      <Drawer.Screen name="Help" component={HelpScreen} />
-      <Drawer.Screen name="CameraScreen" component={CameraScreen} />
-    </Drawer.Navigator>
+      <Drawer.Navigator
+        initialRouteName="MainDashboard"
+        screenOptions={{
+          headerShown: false,
+          drawerStyle: {
+            width: Dimensions.get("window").width * 0.4,
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+            borderRightWidth: 3.5,
+          },
+        }}
+        drawerContent={(props) => <CustomDrawerContent {...props} />}
+      >
+        <Drawer.Screen name="MainDashboard" component={DashboardContent} />
+        <Drawer.Screen
+          name="AddProductDetailsScreen"
+          component={AddProductDetailsScreen}
+        />
+        <Drawer.Screen name="SelectProductScreen" component={SelectProductScreen} />
+        <Drawer.Screen name="Specials" component={Specials} />
+        <Drawer.Screen name="ProfilePage" component={ProfilePage} />
+        <Drawer.Screen name="Settings" component={SettingsScreen} />
+        <Drawer.Screen name="Help" component={HelpScreen} />
+        <Drawer.Screen name="CameraScreen" component={CameraScreen} />
+      </Drawer.Navigator>
+
+    </SafeAreaView>
   );
 };
 
-const DashboardContent = ({ navigation }: any) => {
+const DashboardContent = ({ navigation}: any) => {
+  const [isNotificationModalVisible, setNotificationModalVisible] = useState(false);
+
+  const openNotificationModal = () => {
+    setNotificationModalVisible(true);
+  };
+
+  const closeNotificationModal = () => {
+    setNotificationModalVisible(false);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Top Section */}
@@ -104,7 +123,7 @@ const DashboardContent = ({ navigation }: any) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Notifications")}
+              onPress={openNotificationModal}
             >
               <Image
                 source={require("../assets/images/notification-bell.png")}
@@ -160,6 +179,12 @@ const DashboardContent = ({ navigation }: any) => {
           </Text>
         </View>
       </View>
+
+      {/* Notification Modal */}
+      <NotificationModal
+        visible={isNotificationModalVisible}
+        onClose={closeNotificationModal}
+      />
     </SafeAreaView>
   );
 };
@@ -337,6 +362,9 @@ const CustomDrawerContent = (props: any) => {
           />
         </View>
       </DrawerContentScrollView>
+
+      <SellModal visible={isSellModalVisible} onClose={closeSellModal} />
+      <BuyModal visible={isBuyModalVisible} onClose={closeBuyModal} />
     </>
   );
 };

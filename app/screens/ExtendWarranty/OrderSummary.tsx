@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
 import { LinearGradient } from "expo-linear-gradient"; // Import LinearGradient
 import { useRouter } from "expo-router";
@@ -15,7 +15,7 @@ const OrderSummary = () => {
   const router = useRouter();
 
   return (
-    <View className="flex overflow-hidden">
+    <View className="flex-1 overflow-hidden">
       <LinearGradient
         colors={["#8FFF00", "#00F0FF"]}
         start={{ x: 0.5, y: 0.92 }}
@@ -25,10 +25,10 @@ const OrderSummary = () => {
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back-sharp" size={24} color="black" />
           </TouchableOpacity>
-          <Text className="text-[20px] font-[PoppinsSemiBold]">
+          <Text className="text-[18px] font-[PoppinsSemiBold]">
             Order Summary
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.dismissTo("/screens/MainDashboard")}>
             <Ionicons name="close-sharp" size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -80,10 +80,31 @@ const OrderSummary = () => {
         <View className="mt-6">
             <Text className="font-[PoppinsSemiBold] text-[14px]">Have a discount coupon?</Text>
             
-            <View>
-                
+            <View className="flex flex-row gap-4">
+                <TextInput 
+                  placeholder="Enter coupon code"
+                  maxLength={8}
+                  className="flex-[1.5] bg-white border-[1.5px] px-4 py-4 rounded-[2px] mt-2 font-[PoppinsMedium]"
+                />
+                    
+                <TouchableOpacity
+                  className="flex-1 px-8 py-4 bg-[#0F0F0F] rounded-[2px] mt-2"
+                >
+                  <Text className="text-white font-[PoppinsMedium] text-[14px] text-center">Apply</Text>
+                </TouchableOpacity>
             </View>
         </View>
+      </View>
+
+      <View className="flex-1 align-bottom justify-end">
+        <TouchableOpacity
+          className="mt-10 bg-stone-950 py-4 mx-8 mb-6 border-[1.5px] rounded-[2px] items-center"
+          onPress={() => router.navigate("/screens/ExtendWarranty/CertificateOfProtection")}
+        >
+          <Text className="text-white font-[PoppinsSemiBold] text-[13px]">
+            Continue
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

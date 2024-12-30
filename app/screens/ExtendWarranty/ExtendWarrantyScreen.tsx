@@ -6,18 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
   Image,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
 import { LinearGradient } from "expo-linear-gradient"; // Import LinearGradient
 import { Dropdown } from 'react-native-element-dropdown'; // Import Dropdown
-
-interface PinCodeInputProps {
-  value: string;
-  onChange: (value: string) => void;
-}
 
 interface CategoryOption {
   id: string;
@@ -40,62 +33,51 @@ interface PlanDuration {
   duration: string;
 }
 
-const categories: CategoryOption[] = [
-  {
-    id: "1",
-    label: "Gadgets",
-    icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/e721925b0217249b57c2d6578e8c1e1f03e24f287e8dcf6e86edc054fcf3cf5c?placeholderIfAbsent=true&apiKey=d8aea8d380e243e29c03af727303bd58",
-  },
-  {
-    id: "2",
-    label: "Electronics",
-    icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/e721925b0217249b57c2d6578e8c1e1f03e24f287e8dcf6e86edc054fcf3cf5c?placeholderIfAbsent=true&apiKey=d8aea8d380e243e29c03af727303bd58",
-  },
-];
-
-const devices: DeviceOption[] = [
-  { id: "1", name: "Laptop" },
-  { id: "2", name: "Mobile" },
-  { id: "3", name: "Tablet" },
-];
-
-const priceRanges: PriceRange[] = [
-  { id: "1", range: "₹ 0 - 40000" },
-  { id: "2", range: "₹ 40001 - 70000" },
-  { id: "3", range: "₹ 70001 - 100000" },
-];
-
-const planDurations: PlanDuration[] = [
-  { id: "1", duration: "1 year" },
-  { id: "2", duration: "2 years" },
-  { id: "3", duration: "3 years" },
-];
 
 const ExtendWarrantyScreen = () => {
+  const router = useRouter();
+
   const [pinCode, setPinCode] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("1");
   const [selectedDevice, setSelectedDevice] = useState<string>("1");
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>("2");
   const [selectedPlanDuration, setSelectedPlanDuration] = useState<string>("1");
 
-  const router = useRouter();
-
-  const handleCheckAvailability = () => {
-    if (pinCode.length !== 6) {
-      Alert.alert("Invalid PIN Code", "Please enter a valid 6-digit PIN code");
-      return;
-    }
-    Alert.alert("Checking availability for PIN code: " + pinCode);
-  };
-
-  const handleContinue = () => {
-    router.navigate("/screens/ExtendWarranty/GoWarrantyFeatures");
-  };
+  const categories: CategoryOption[] = [
+    {
+      id: "1",
+      label: "Gadgets",
+      icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/e721925b0217249b57c2d6578e8c1e1f03e24f287e8dcf6e86edc054fcf3cf5c?placeholderIfAbsent=true&apiKey=d8aea8d380e243e29c03af727303bd58",
+    },
+    {
+      id: "2",
+      label: "Electronics",
+      icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/e721925b0217249b57c2d6578e8c1e1f03e24f287e8dcf6e86edc054fcf3cf5c?placeholderIfAbsent=true&apiKey=d8aea8d380e243e29c03af727303bd58",
+    },
+  ];
+  
+  const devices: DeviceOption[] = [
+    { id: "1", name: "Laptop" },
+    { id: "2", name: "Mobile" },
+    { id: "3", name: "Tablet" },
+  ];
+  
+  const priceRanges: PriceRange[] = [
+    { id: "1", range: "₹ 0 - 40000" },
+    { id: "2", range: "₹ 40001 - 70000" },
+    { id: "3", range: "₹ 70001 - 100000" },
+  ];
+  
+  const planDurations: PlanDuration[] = [
+    { id: "1", duration: "1 year" },
+    { id: "2", duration: "2 years" },
+    { id: "3", duration: "3 years" },
+  ];  
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-200">
+    <View className="flex-1 bg-[#EDEDED]">
       <ScrollView>
-        <View className="flex overflow-hidden flex-col w-full bg-[#EDEDED]">
+        <View className="flex overflow-hidden flex-col w-full">
           {/* Header with Linear Gradient */}
           <LinearGradient
             colors={["#8FFF00", "#00F0FF"]}
@@ -104,25 +86,23 @@ const ExtendWarrantyScreen = () => {
           >
             <View className="flex flex-row justify-between items-center px-8 py-6 mt-2">
               {/* Back Button */}
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => router.back()}>
                 <Ionicons
                   name="arrow-back"
                   size={24}
                   color="black"
-                  onPress={() => router.back()}
                 />
               </TouchableOpacity>
-              <Text className="text-[20px] font-[PoppinsSemiBold] text-black">
+              <Text className="text-[18px] font-[PoppinsSemiBold] text-black">
                 Extend Warranty
               </Text>
               {/* Menu Button */}
-              <TouchableOpacity>
-                <Ionicons
+              <TouchableOpacity onPress={() => router.dismiss()}>
+                {/* <Ionicons
                   name="close-sharp"
                   size={24}
                   color="black"
-                  onPress={() => router.back()}
-                />
+                /> */}
               </TouchableOpacity>
             </View>
           </LinearGradient>
@@ -154,10 +134,8 @@ const ExtendWarrantyScreen = () => {
                   className="flex-[1.5] px-4 py-4 bg-white font-[PoppinsSemiBold] rounded-[2px] border-[1.5px] border-black"
                   accessibilityLabel="PIN code input"
                 />
-                <TouchableOpacity
-                  onPress={handleCheckAvailability}
+                <TouchableOpacity  
                   className="px-8 flex-1 py-4 bg-stone-950 rounded-[2px]"
-                  accessibilityLabel="Check availability"
                 >
                   <Text className="text-white text-[14px] text-center font-[PoppinsSemiBold]">
                     Check
@@ -264,15 +242,14 @@ const ExtendWarrantyScreen = () => {
 
       {/* Continue Button */}
       <TouchableOpacity
-        onPress={handleContinue}
-        className="mt-10 bg-stone-950 py-4 mx-8 mb-8 border-[1.5px] items-center"
-        accessibilityLabel="Continue button"
+        onPress={() => router.navigate("/screens/ExtendWarranty/GoWarrantyFeatures")}
+        className="flex bg-stone-950 py-4 mx-8 mb-6 border-[1.5px] items-center"
       >
         <Text className="text-white text-[13px] font-[PoppinsSemiBold]">
           Continue
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
