@@ -25,7 +25,7 @@ const Overlay: React.FC<OverlayProps> = ({ onGoBack }) => {
         {/* Sample Barcode Image */}
         <View style={styles.sampleImageContainer}>
           <Image
-            source={require('../assets/images/sample-barcode.png')}
+            source={require('@/app/assets/images/sample-barcode.png')}
             style={styles.sampleImage}
             accessibilityLabel="Sample barcode"
           />
@@ -35,7 +35,7 @@ const Overlay: React.FC<OverlayProps> = ({ onGoBack }) => {
       {/* Camera View and Overlay */}
       <View style={styles.cameraOverlay}>
         <Image
-          source={require('../assets/images/scan-overlay.png')}
+          source={require('@/app/assets/images/scan-overlay.png')}
           style={styles.scanOverlay}
           accessibilityLabel="Scan overlay"
         />

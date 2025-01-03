@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, StatusBar, Platform } from 'react-native';
+import { View, TouchableOpacity} from 'react-native';
 import ProductCard from '@/app/components/ProductCard';
 import { Ionicons } from '@expo/vector-icons'; // Icons
 import { useRouter } from 'expo-router'; // Navigation
@@ -27,19 +27,13 @@ const BuyScreen = () => {
     { id: '6', image: TV1, title: 'Smart TV', location: 'Connecticut Ave', price: 1820 },
   ];
 
-  const statusBarHeight = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight || 0; 
 
   return (
-    <View className="flex-1 bg-[#F5F5F5]" style={{ paddingTop: statusBarHeight }}> 
-      <StatusBar
-        translucent={true}
-        barStyle="dark-content" 
-        backgroundColor="#F5F5F5" 
-      />
+    <View className="flex-1 bg-[#F5F5F5]"> 
 
       {/* Header */}
       <View className="flex-row justify-between items-center px-8 py-6 mt-4">
-        <TouchableOpacity onPress={() => router.push('/screens/MainDashboard')}>
+        <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         <View className="flex-row gap-6">

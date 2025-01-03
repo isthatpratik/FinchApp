@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
 import { LinearGradient } from "expo-linear-gradient"; // Import LinearGradient
 import { useRouter } from "expo-router";
@@ -15,8 +15,12 @@ const CertificateOfProtection = () => {
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [isChecked3, setIsChecked3] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
 
   const allChecked = isChecked1 && isChecked2 && isChecked3;
+  const formFilled = name !== "" && email !== "" && mobile !== "" && selectedValue !== null;
 
   const data: DropdownItem[] = [
     { id: "1", range: "Maharashtra" },
@@ -26,6 +30,9 @@ const CertificateOfProtection = () => {
 
   const router = useRouter();
 
+  const { height } = Dimensions.get("window");
+  const isSmallScreen = height < 850;
+
   return (
     <View className="flex-1 overflow-hidden">
       <LinearGradient
@@ -33,14 +40,16 @@ const CertificateOfProtection = () => {
         start={{ x: 0.5, y: 0.92 }}
         className="py-2 border-b-2"
       >
-        <View className="flex flex-row justify-between items-center px-8 py-6 mt-2">
-          <TouchableOpacity onPress={() => router.dismiss()}>
+        <View className={`flex flex-row justify-between items-center px-8 ${
+            isSmallScreen ? "py-4 mt-2" : "py-6 mt-2"
+          }`}>
+          <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
           <Text className="text-[18px] text-center font-[PoppinsSemiBold]">
             Certificate of Protection
           </Text>
-          <TouchableOpacity onPress={() => router.dismissTo("/screens/MainDashboard")}>
+          <TouchableOpacity onPress={() => router.dismissTo("/screens/ProductWarrantyDetails")}>
             <Ionicons name="close-sharp" size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -50,6 +59,8 @@ const CertificateOfProtection = () => {
         <View className="flex mt-4 px-8 mb-2">
           <Text className="font-[PoppinsSemiBold] text-[14px]">Name</Text>
           <TextInput
+            value={name}
+            onChangeText={setName}
             className="bg-white border-[1.5px] rounded-[2px] font-[PoppinsMedium] px-5 py-4 mt-1"
             placeholder="Enter your full name"
           />
@@ -58,6 +69,8 @@ const CertificateOfProtection = () => {
         <View className="flex mt-4 px-8 mb-2">
           <Text className="font-[PoppinsSemiBold] text-[14px]">Enter your email</Text>
           <TextInput
+            value={email}
+            onChangeText={setEmail}
             className="bg-white border-[1.5px] rounded-[2px] font-[PoppinsMedium] px-5 py-4 mt-1"
             placeholder="Type your working email address"
           />
@@ -66,6 +79,8 @@ const CertificateOfProtection = () => {
         <View className="flex mt-4 px-8 mb-2">
           <Text className="font-[PoppinsSemiBold] text-[14px]">Enter your mobile number</Text>
           <TextInput
+            value={mobile}
+            onChangeText={setMobile}
             className="bg-white border-[1.5px] rounded-[2px] font-[PoppinsMedium] px-5 py-4 mt-1"
             placeholder="e.g. 9876543210"
           />
@@ -124,14 +139,14 @@ const CertificateOfProtection = () => {
       <View className="flex-1 align-bottom justify-end">
         <TouchableOpacity
           className={`mt-10 py-4 mx-10 mb-6 border-[1.5px] rounded-[2px] items-center ${
-            allChecked ? "bg-stone-950" : "bg-gray-700 opacity-50"
+            allChecked && formFilled ? "bg-stone-950" : "bg-gray-700 opacity-50"
           }`}
-          onPress={() => allChecked && router.dismissTo('/screens/MainDashboard')}
-          disabled={!allChecked}
+          onPress={() => allChecked && formFilled && router.dismissTo('/screens/ProductWarrantyDetails')}
+          disabled={!allChecked || !formFilled}
         >
           <Text
             className={`font-[PoppinsSemiBold] text-[13px] ${
-              allChecked ? "text-white" : "text-gray-900"
+              allChecked && formFilled ? "text-white" : "text-gray-900"
             }`}
           >
             Pay Securely

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
-import { LinearGradient } from "expo-linear-gradient"; // Import LinearGradient
+import React from "react";
+import { View, Text, TextInput, TouchableOpacity, Dimensions } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 
 const dynamicData = {
@@ -13,6 +13,9 @@ const dynamicData = {
 
 const OrderSummary = () => {
   const router = useRouter();
+  
+  const { height } = Dimensions.get("window");
+  const isSmallScreen = height < 850;
 
   return (
     <View className="flex-1 overflow-hidden">
@@ -21,14 +24,14 @@ const OrderSummary = () => {
         start={{ x: 0.5, y: 0.92 }}
         className="py-2 border-b-2"
       >
-        <View className="flex flex-row justify-between items-center px-8 py-6 mt-2">
+        <View className={`flex flex-row justify-between items-center px-8 ${
+            isSmallScreen ? "py-4 mt-2" : "py-6 mt-2"
+          }`}>
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back-sharp" size={24} color="black" />
           </TouchableOpacity>
-          <Text className="text-[18px] font-[PoppinsSemiBold]">
-            Order Summary
-          </Text>
-          <TouchableOpacity onPress={() => router.dismissTo("/screens/MainDashboard")}>
+          <Text className="text-[18px] font-[PoppinsSemiBold]">Order Summary</Text>
+          <TouchableOpacity onPress={() => router.dismissTo("/screens/ProductWarrantyDetails")}>
             <Ionicons name="close-sharp" size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -49,7 +52,7 @@ const OrderSummary = () => {
             </View>
           </View>
 
-          <View className="flex flex-row border-b ">
+          <View className="flex flex-row border-b">
             <View className="flex-1 p-4 border-r bg-[#00F0FF]">
               <Text className="text-[12px] px-4 font-[PoppinsSemiBold]">Price Range</Text>
             </View>
@@ -78,27 +81,27 @@ const OrderSummary = () => {
         </View>
 
         <View className="mt-6">
-            <Text className="font-[PoppinsSemiBold] text-[14px]">Have a discount coupon?</Text>
-            
-            <View className="flex flex-row gap-4">
-                <TextInput 
-                  placeholder="Enter coupon code"
-                  maxLength={8}
-                  className="flex-[1.5] bg-white border-[1.5px] px-4 py-4 rounded-[2px] mt-2 font-[PoppinsMedium]"
-                />
-                    
-                <TouchableOpacity
-                  className="flex-1 px-8 py-4 bg-[#0F0F0F] rounded-[2px] mt-2"
-                >
-                  <Text className="text-white font-[PoppinsMedium] text-[14px] text-center">Apply</Text>
-                </TouchableOpacity>
-            </View>
+          <Text className="font-[PoppinsSemiBold] text-[14px]">Have a discount coupon?</Text>
+
+          <View className="flex flex-row gap-4">
+            <TextInput
+              placeholder="Enter coupon code"
+              maxLength={8}
+              className="flex-[1.5] bg-white border-[1.5px] px-4 py-4 rounded-[2px] mt-2 font-[PoppinsMedium]"
+            />
+
+            <TouchableOpacity
+              className="flex-1 px-8 py-4 bg-[#0F0F0F] rounded-[2px] mt-2"
+            >
+              <Text className="text-white font-[PoppinsMedium] text-[14px] text-center">Apply</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
       <View className="flex-1 align-bottom justify-end">
         <TouchableOpacity
-          className="mt-10 bg-stone-950 py-4 mx-8 mb-6 border-[1.5px] rounded-[2px] items-center"
+          className={`mt-10 ${isSmallScreen ? "mb-5" : "mb-6"} bg-stone-950 py-4 mx-8 border-[1.5px] rounded-[2px] items-center`}
           onPress={() => router.navigate("/screens/ExtendWarranty/CertificateOfProtection")}
         >
           <Text className="text-white font-[PoppinsSemiBold] text-[13px]">

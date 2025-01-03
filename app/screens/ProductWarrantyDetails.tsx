@@ -3,333 +3,189 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  Dimensions,
   Image,
+  useWindowDimensions,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { LineChart } from "react-native-gifted-charts"; // Use LineChart component
-
-const { width, height } = Dimensions.get("window");
+import { useRouter, useLocalSearchParams } from "expo-router";
+import {
+  Ionicons,
+  AntDesign,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 const ProductWarrantyDetails = () => {
-  // Dynamic data for the chart (example data)
-  const [paidValue, setPaidValue] = useState(2000);
-  const [currentValue, setCurrentValue] = useState(1100);
+  const router = useRouter();
+  const params = useLocalSearchParams(); // Receive product data as route parameters
+  const [liked, setLiked] = useState<boolean | null>(null); // To track like/dislike status
+  const { width, height } = useWindowDimensions(); // Get the screen width and height
 
-  // Sample dynamic data for the chart
-  const chartData = [
-    { value: 2000,
-      hideDataPoint: false,
-      dataPointLabelShiftY: -20,
-      dataPointLabelComponent: () => {
-        return (
-            <View
-            style={{
-                backgroundColor: 'transparent',
-                paddingHorizontal: 8,
-                paddingVertical: 5,
-                borderRadius: 4,
-            }}>
-            <Text style={{color: 'black'}}>$2000</Text>
-            </View>
-        );
-      }
-    },
-    { value: 1500 },
-    { value: 1800 },
-    { value: 1400 },
-    { value: 1200 },
-    { value: 1100,
-      hideDataPoint: false,
-      dataPointLabelShiftY: -30,
-      dataPointLabelComponent: () => {
-        return (
-            <View
-            style={{
-                backgroundColor: 'transparent',
-                paddingHorizontal: 8,
-                paddingVertical: 5,
-                borderRadius: 4,
-            }}>
-            <Text style={{color: 'black'}}>$1100</Text>
-            </View>
-        );
-      }
-     },
-  ];
+  const handleLike = () => setLiked(true);
+  const handleDislike = () => setLiked(false);
+
+  const isSmallScreen = width < 400 || height < 600; // Check for smaller screens
+  const cardWidth = isSmallScreen ? "44%" : "44%"; // Adjust card width for smaller screens
+  const cardPadding = isSmallScreen ? 4 : 6; // Adjust card padding for smaller screens
+  const sectionPadding = isSmallScreen ? 6 : 10; // Adjust padding for the section 
 
   return (
-    <View style={styles.container}>
-      {/* Top Section */}
-      <View style={styles.topSection}>
-        {/* Close Button */}
-        <TouchableOpacity style={styles.closeButton}>
-          <Ionicons name="close" size={24} color="black" />
-        </TouchableOpacity>
+    <View className="flex-1 bg-[#EDEDED]">
+      {/* Product Details */}
+      <View className="px-10 py-6 mt-6">
+        <View className="flex-row items-center justify-between mb-1">
+          <Text className="text-[20px] font-[PoppinsSemiBold]">
+            {params.name}
+          </Text>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="close-sharp" size={24} color="#000" />
+          </TouchableOpacity>
+        </View>
 
-        {/* Product Details */}
-        <View style={styles.productDetails}>
-          <View>
-            <Text style={styles.productTitle}>Airbook Ultra</Text>
-            <Text style={styles.productLocation}>John's Laptop</Text>
-            <View style={styles.warrantyContainer}>
-              <Text style={styles.warrantyText}>Warranty expires in</Text>
-              <Text style={styles.warrantyDuration}>18 months</Text>
+        <Text className="text-[14px] font-[PoppinsMedium] text-[#828282] mb-2">
+          {params.label}
+        </Text>
+
+        <View className="flex-row justify-between mr-2">
+          <View className="flex-1">
+            <View className="flex flex-row mb-3">
+              <Text className="text-[12px] font-[PoppinsMedium]">
+                Warranty expires in{" "}
+              </Text>
+              <Text className="font-[PoppinsMedium] text-[12px] text-center bg-[#8FFF00] px-1 border-[1.5px]">
+                18 months
+              </Text>
             </View>
 
-            {/* Model & Serial Details */}
-            <View style={styles.modelDetails}>
-              <View style={styles.modelRow}>
-                <View style={styles.modelDetailColumn}>
-                  <Text style={styles.modelLabel}>Model:</Text>
-                  <Text style={styles.modelValue}>1856SKNS00</Text>
+            <View className="flex-row justify-between items-start">
+              <View className="flex-row gap-6">
+                <View>
+                  <Text className="text-[12px] font-[PoppinsMedium] mb-1">
+                    Model No:
+                  </Text>
+                  <Text className="text-[14px] text-[#828282] font-[PoppinsMedium]">
+                    1856SKNS00
+                  </Text>
                 </View>
-                <View style={styles.modelDetailColumn}>
-                  <Text style={styles.modelLabel}>Serial no:</Text>
-                  <Text style={styles.modelValue}>505145663</Text>
+                <View>
+                  <Text className="text-[12px] font-[PoppinsMedium] mb-1">
+                    Serial No:
+                  </Text>
+                  <Text className="text-[14px] text-[#828282] font-[PoppinsMedium] mb-2">
+                    505145663
+                  </Text>
                 </View>
               </View>
             </View>
           </View>
-          <View style={styles.likeContainer}>
-            <Text style={styles.likeText}>Like this product?</Text>
-            <View style={styles.likeIcons}>
-              <TouchableOpacity>
-                <Image
-                  source={require('../assets/images/icons/like.png')}
-                  style={styles.icon}
+
+          <View className="items-center">
+            <Text className="text-[10px] mb-2 font-[PoppinsMedium]">
+              Like this product?
+            </Text>
+            <View className="flex-row justify-between gap-8">
+              <TouchableOpacity onPress={handleLike}>
+                <AntDesign
+                  name="like1"
+                  size={20}
+                  color={liked === true ? "#000" : "#BDBDBD"}
                 />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.dislikeIcon}>
-                <Image
-                  source={require('../assets/images/icons/dislike.png')}
-                  style={styles.icon}
+              <TouchableOpacity onPress={handleDislike}>
+                <AntDesign
+                  name="dislike1"
+                  size={20}
+                  color={liked === false ? "#000" : "#BDBDBD"}
                 />
               </TouchableOpacity>
             </View>
           </View>
         </View>
-
-        {/* Graph */}
-        <View style={styles.graphContainer}>
-
-          {/* Curved AreaChart Component */}
-          <LineChart
-            areaChart
-            curved
-            data={chartData}
-            width={width} // Chart width
-            height={150} // Chart height
-            color="#000" // Line color (black)
-            startFillColor="#FFEE00"
-            endFillColor="#FFEE00"
-            startOpacity={1}
-            endOpacity={1}
-            hideYAxisText
-            thickness1={4}
-            showVerticalLines
-            hideRules
-            hideAxesAndRules
-          />
-
-          <Text style={styles.graphCenterText}>Valuation Trend</Text>
-        </View>
       </View>
 
-      {/* Bottom Section */}
-      <View style={styles.bottomSection}>
-        <View style={styles.cardRow}>
-          <TouchableOpacity style={styles.card}>
-            <Image
-              source={require('../assets/images/icons/warranty.png')}
-              style={styles.icon}
-            />
-            <Text style={styles.cardText}>Extend Warranty</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.card}>
-            <Image
-              source={require('../assets/images/icons/sell.png')}
-              style={styles.icon}
-            />
-            <Text style={styles.cardText}>Sell this Product</Text>
-          </TouchableOpacity>
+      <View className="overflow-hidden">
+        <Image
+          source={require("@/app/assets/images/Warrnaty/valuation.png")}
+          className="w-full h-[235px] mt-2"
+          resizeMode="contain"
+        />
+      </View>
+
+      <View className="bg-[#00F0FF] flex-1 border-t-[1.5px]">
+        <View className={`px-10 py-${sectionPadding}`}>
+          {/* Cards container with flex-wrap */}
+          <View className="flex-row flex-wrap justify-between">
+            <TouchableOpacity
+              className={`bg-white p-${cardPadding} m-2 rounded-[2px] border-[1.5px] border-b-[3.5px] border-r-[3.5px]`}
+              style={{ width: cardWidth }}
+              onPress={() =>
+                router.push("/screens/ExtendWarranty/ExtendWarrantyScreen")
+              }
+            >
+              <Image
+                source={require("@/app/assets/images/icons/warranty.png")}
+                className="w-8 h-8 mb-2"
+                resizeMode="contain"
+              />
+              <Text className="text-start mt-1 max-w-20 text-[14px] font-[PoppinsMedium]">
+                Extend Warranty
+              </Text>
+            </TouchableOpacity>
+
+            <View
+              className={`bg-white p-${cardPadding} m-2 rounded-[2px] border-[1.5px] border-b-[3.5px] border-r-[3.5px]`}
+              style={{ width: cardWidth }}
+            >
+              <Image
+                source={require("@/app/assets/images/icons/$.png")}
+                className="w-8 h-8 mb-2"
+                resizeMode="contain"
+              />
+              <Text className="text-start mt-1 max-w-20 text-[14px] font-[PoppinsMedium]">
+                Sell this Product
+              </Text>
+            </View>
+
+            <View
+              className={`bg-white p-${cardPadding} m-2 rounded-[2px] border-[1.5px] border-b-[3.5px] border-r-[3.5px]`}
+              style={{ width: cardWidth }}
+            >
+              <Image
+                source={require("@/app/assets/images/icons/receipt.png")}
+                className="w-8 h-8 mb-2"
+                resizeMode="contain"
+              />
+              <Text className="text-start mt-1 max-w-20 text-[14px] font-[PoppinsMedium]">
+                View Receipt
+              </Text>
+            </View>
+
+            <View
+              className={`bg-white p-${cardPadding} m-2 rounded-[2px] border-[1.5px] border-b-[3.5px] border-r-[3.5px]`}
+              style={{ width: cardWidth }}
+            >
+              <Image
+                source={require("@/app/assets/images/icons/repair.png")}
+                className="w-8 h-8 mb-2"
+                resizeMode="contain"
+              />
+              <Text className="text-start mt-1 max-w-20 text-[14px] font-[PoppinsMedium]">
+                Repairs & Service
+              </Text>
+            </View>
+          </View>
         </View>
-        <View style={styles.cardRow}>
-          <TouchableOpacity style={styles.card}>
-            <Image
-              source={require('../assets/images/icons/receipt.png')}
-              style={styles.icon}
-            />
-            <Text style={styles.cardText}>View Receipt</Text>
+        <View
+          className={`bg-[#00F0FF] flex-row items-center justify-center px-6 absolute left-0 right-0 bottom-5 h-[10%]`}
+        >
+          <TouchableOpacity className="px-1">
+            <MaterialCommunityIcons name="delete" size={24} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.card}>
-            <Image
-              source={require('../assets/images/icons/repair.png')}
-              style={styles.icon}
-            />
-            <Text style={styles.cardText}>Repairs & Service</Text>
-          </TouchableOpacity>
+          <Text className="font-[PoppinsMedium] text-[14px] mt-1">
+            Delete this product
+          </Text>
         </View>
-        <TouchableOpacity style={styles.deleteButton}>
-          <Image
-            source={require('../assets/images/icons/delete.png')}
-            style={styles.icon}
-          />
-          <Text style={styles.deleteText}>Delete this product</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    fontFamily: "PoppinsMedium",
-  },
-  topSection: {
-    flex: 0.5,
-    backgroundColor: "#EDEDED",
-    padding: 42,
-    position: "relative",
-  },
-  closeButton: {
-    position: "absolute",
-    top: 32,
-    right: 16,
-  },
-  productDetails: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 20,
-  },
-  productTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#000",
-  },
-  productLocation: {
-    fontSize: 14,
-    color: "#888",
-    marginBottom: 8,
-  },
-  warrantyContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  warrantyText: {
-    fontSize: 12,
-    color: "#000",
-    marginRight: 4,
-  },
-  warrantyDuration: {
-    fontSize: 12,
-    color: "#000",
-    backgroundColor: "#8FFF00",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderWidth: 1,
-  },
-  modelDetails: {
-    marginTop: 12,
-    width: "80%",
-  },
-  modelRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  modelDetailColumn: {
-    width: "45%",
-  },
-  modelLabel: {
-    fontSize: 12,
-    color: "#000",
-    marginBottom: 4,
-  },
-  modelValue: {
-    fontSize: 14,
-    color: "#828282",
-  },
-  likeContainer: {
-    alignItems: "flex-start",
-    marginTop: "25%",
-  },
-  likeText: {
-    fontSize: 14,
-    color: "#828282",
-    marginBottom: 8,
-  },
-  likeIcons: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  dislikeIcon: {
-    marginLeft: 12,
-  },
-  graphContainer: {
-    alignItems: "center",
-    marginTop: 16,
-    width: '100%',
-  },
-  
-  graphCenterText: {
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-  bottomSection: {
-    flex: 0.5,
-    backgroundColor: "#00F0FF",
-    padding: 16,
-    borderTopWidth: 2,
-  },
-  cardRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 16,
-  },
-  card: {
-    width: "45%",
-    backgroundColor: "#FFF",
-    padding: 32,
-    justifyContent: "center",
-    borderRadius: 2,
-    borderWidth: 2,
-    borderColor: "#000",
-  },
-  cardText: {
-    marginTop: 8,
-    fontSize: 14,
-    color: "#000",
-  },
-  deleteButton: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 16,
-  },
-  deleteText: {
-    marginLeft: 8,
-    fontSize: 14,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-  },
-  squareDot: {
-    width: 8,
-    height: 8,
-    backgroundColor: "#000",
-    borderRadius: 2,
-    position: "absolute",
-  },
-  chartStyle: {
-    borderRadius: 8,
-    marginTop: 20,
-  },
-});
 
 export default ProductWarrantyDetails;

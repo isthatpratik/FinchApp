@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert, ScrollView} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Slider } from "@miblanchard/react-native-slider";
 import { Ionicons } from "@expo/vector-icons";
 import MapView, { Circle, Marker } from "react-native-maps";
-import Geolocation from "react-native-geolocation-service";
+import * as Location from "expo-location"; // import expo-location
 import FinchBuyPopup from "@/app/components/FinchBuyPopup";
+import { useRouter } from "expo-router";
 
 const BuyDetails = () => {
+  const router = useRouter();
   const [status, setStatus] = useState("In Warranty");
   const [selectedCategory, setSelectedCategory] = useState("Electronics");
   const [selectedBrand, setSelectedBrand] = useState("Samsung");
@@ -34,30 +36,28 @@ const BuyDetails = () => {
   const handlePopupToggle = () => setShowPopup(!showPopup);
 
   useEffect(() => {
-    // Request location permission and fetch current location
-    Geolocation.requestAuthorization("whenInUse").then((permission) => {
-      if (permission === "granted") {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setCurrentLocation((prev) => ({
-              ...prev,
-              latitude,
-              longitude,
-            }));
-          },
-          (error) => {
-            Alert.alert("Location Error", error.message);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-        );
+    // Request location permission and fetch current location using expo-location
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === "granted") {
+        let location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
+        });
+        const { latitude, longitude } = location.coords;
+        setCurrentLocation((prev) => ({
+          ...prev,
+          latitude,
+          longitude,
+        }));
       } else {
         Alert.alert(
           "Permission Denied",
           "Allow location access to use this feature."
         );
       }
-    });
+    };
+
+    getLocation();
   }, []);
 
   const handlePriceChange = (values: number[]) => {
@@ -72,10 +72,10 @@ const BuyDetails = () => {
     <View className="flex-1 bg-[#F5F5F5] px-8 mb-1">
       {/* Header */}
       <View className="flex-row justify-between py-6 mt-4 mb-2 items-center">
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.dismissTo("/screens/MainDashboard")}>
           <Ionicons name="close" size={24} color="black" />
         </TouchableOpacity>
       </View>

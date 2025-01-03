@@ -12,17 +12,16 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import * as Font from "expo-font";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import ProfilePage from "./Profile";
-import CameraScreen from "./CameraScreen";
-import AddProductDetailsScreen from "./AddProductDetailsScreen";
+import CameraScreen from "./Camera/CameraScreen";
+import AddProductDetailsScreen from "./AddProductDetails/AddProductDetailsScreen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SpecialsScreen from "./Specials";
 import SellModal from "../components/SellModal";
 import BuyModal from "../components/BuyModal";
 import SelectProductScreen from "./Sell/Regular/SelectProductScreen";
 import Settings from "./Settings";
-import ExtendWarranty from "./ExtendWarranty/ExtendWarrantyScreen";
 import NotificationModal from "../components/NotificationModal";
-
+import { useRouter } from "expo-router";
 
 const Drawer = createDrawerNavigator();
 
@@ -87,6 +86,8 @@ const MainDashboardScreen: React.FC = () => {
 };
 
 const DashboardContent = ({ navigation}: any) => {
+  const router = useRouter();
+
   const [isNotificationModalVisible, setNotificationModalVisible] = useState(false);
 
   const openNotificationModal = () => {
@@ -100,7 +101,7 @@ const DashboardContent = ({ navigation}: any) => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Top Section */}
-      <View className="h-[60%] px-4 pt-10 sm:px-6 md:px-8 relative">
+      <View className="h-[60%] px-8 pt-10 sm:px-6 md:px-8 relative">
         <LinearGradient
           colors={["#FFEE00", "#00F0FF"]}
           style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
@@ -114,8 +115,8 @@ const DashboardContent = ({ navigation}: any) => {
               resizeMode="contain"
             />
           </TouchableOpacity>
-          <View className="flex-row gap-10 sm:gap-8">
-            <TouchableOpacity onPress={() => navigation.navigate("Messages")}>
+          <View className="flex-row gap-10">
+            <TouchableOpacity onPress={() => router.navigate("/screens/Messages/AllMessages")}>
               <Image
                 source={require("../assets/images/message-icon.png")}
                 className="sm:w-5 sm:h-5 w-6 h-6"
@@ -169,11 +170,14 @@ const DashboardContent = ({ navigation}: any) => {
           My Products
         </Text>
         <View className="items-center mt-8 sm:mt-4">
+          <TouchableOpacity onPress={() => router.navigate("/screens/MyProducts")}>
+
           <Image
             source={require("../assets/images/empty-box.png")}
             className="w-16 h-16 sm:w-14 sm:h-14"
             resizeMode="contain"
           />
+          </TouchableOpacity>
           <Text className="mt-4 text-[12px] sm:text-xs w-[120px] sm:w-[100px] text-center text-gray-500 font-[Poppins-Medium]">
             Gee! Add a product to get started
           </Text>
@@ -197,7 +201,7 @@ const CustomDrawerContent = (props: any) => {
     props.navigation.closeDrawer();
     setTimeout(() => {
       setBuyModalVisible(true);
-    }, 200);
+    }, 300);
   };
   const closeBuyModal = () => setBuyModalVisible(false);
 
@@ -205,7 +209,7 @@ const CustomDrawerContent = (props: any) => {
     props.navigation.closeDrawer(); // Close the drawer
     setTimeout(() => {
       setSellModalVisible(true); // Open the modal after the drawer is closed
-    }, 200); // Delay of 200ms (adjust as needed)
+    }, 300); // Delay of 200ms (adjust as needed)
   };
   const closeSellModal = () => setSellModalVisible(false);
 
@@ -362,9 +366,6 @@ const CustomDrawerContent = (props: any) => {
           />
         </View>
       </DrawerContentScrollView>
-
-      <SellModal visible={isSellModalVisible} onClose={closeSellModal} />
-      <BuyModal visible={isBuyModalVisible} onClose={closeBuyModal} />
     </>
   );
 };
@@ -378,7 +379,7 @@ const SettingsScreen = () => {
 };
 
 const HelpScreen = () => {
-  return <ExtendWarranty />;
+  return <MainDashboardScreen />;
 };
   
 

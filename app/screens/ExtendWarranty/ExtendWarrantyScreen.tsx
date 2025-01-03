@@ -7,15 +7,16 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Dimensions,
+  KeyboardAvoidingView
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
-import { LinearGradient } from "expo-linear-gradient"; // Import LinearGradient
-import { Dropdown } from 'react-native-element-dropdown'; // Import Dropdown
+import { Ionicons } from "@expo/vector-icons"; 
+import { LinearGradient } from "expo-linear-gradient"; 
+import { Dropdown } from "react-native-element-dropdown"; 
 
 interface CategoryOption {
   id: string;
   label: string;
-  icon?: string;
 }
 
 interface DeviceOption {
@@ -33,81 +34,79 @@ interface PlanDuration {
   duration: string;
 }
 
-
-const ExtendWarrantyScreen = () => {
+const ExtendWarrantyScreen: React.FC = () => {
   const router = useRouter();
 
   const [pinCode, setPinCode] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("1");
-  const [selectedDevice, setSelectedDevice] = useState<string>("1");
-  const [selectedPriceRange, setSelectedPriceRange] = useState<string>("2");
-  const [selectedPlanDuration, setSelectedPlanDuration] = useState<string>("1");
+  const [selectedCategory, setSelectedCategory] = useState<string>(""); // Default to empty string
+  const [selectedDevice, setSelectedDevice] = useState<string>(""); // Default to empty string
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>(""); // Default to empty string
+  const [selectedPlanDuration, setSelectedPlanDuration] = useState<string>(""); // Default to empty string
+
+  const { height } = Dimensions.get("window");
+
+  const isSmallScreen = height < 850;
 
   const categories: CategoryOption[] = [
     {
       id: "1",
       label: "Gadgets",
-      icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/e721925b0217249b57c2d6578e8c1e1f03e24f287e8dcf6e86edc054fcf3cf5c?placeholderIfAbsent=true&apiKey=d8aea8d380e243e29c03af727303bd58",
     },
     {
       id: "2",
       label: "Electronics",
-      icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/e721925b0217249b57c2d6578e8c1e1f03e24f287e8dcf6e86edc054fcf3cf5c?placeholderIfAbsent=true&apiKey=d8aea8d380e243e29c03af727303bd58",
     },
   ];
-  
+
   const devices: DeviceOption[] = [
     { id: "1", name: "Laptop" },
     { id: "2", name: "Mobile" },
     { id: "3", name: "Tablet" },
   ];
-  
+
   const priceRanges: PriceRange[] = [
     { id: "1", range: "₹ 0 - 40000" },
     { id: "2", range: "₹ 40001 - 70000" },
     { id: "3", range: "₹ 70001 - 100000" },
   ];
-  
+
   const planDurations: PlanDuration[] = [
     { id: "1", duration: "1 year" },
     { id: "2", duration: "2 years" },
     { id: "3", duration: "3 years" },
-  ];  
+  ];
+
+  const isFormValid = pinCode.length === 6 && selectedCategory && selectedDevice && selectedPriceRange && selectedPlanDuration;
 
   return (
     <View className="flex-1 bg-[#EDEDED]">
-      <ScrollView>
-        <View className="flex overflow-hidden flex-col w-full">
-          {/* Header with Linear Gradient */}
-          <LinearGradient
-            colors={["#8FFF00", "#00F0FF"]}
-            start={{ x: 0.5, y: 0.92 }}
-            className="py-2 border-b-2"
+      <View className="flex-1 overflow-hidden flex-col w-full">
+        <LinearGradient
+          colors={["#8FFF00", "#00F0FF"]}
+          start={{ x: 0.5, y: 0.92 }}
+          className="py-2 border-b-2"
+        >
+          <View
+            className={`flex flex-row justify-between items-center px-8 ${
+              isSmallScreen ? "py-4 mt-2" : "py-6 mt-2"
+            }`}
           >
-            <View className="flex flex-row justify-between items-center px-8 py-6 mt-2">
-              {/* Back Button */}
-              <TouchableOpacity onPress={() => router.back()}>
-                <Ionicons
-                  name="arrow-back"
-                  size={24}
-                  color="black"
-                />
-              </TouchableOpacity>
-              <Text className="text-[18px] font-[PoppinsSemiBold] text-black">
-                Extend Warranty
-              </Text>
-              {/* Menu Button */}
-              <TouchableOpacity onPress={() => router.dismiss()}>
-                {/* <Ionicons
-                  name="close-sharp"
-                  size={24}
-                  color="black"
-                /> */}
-              </TouchableOpacity>
-            </View>
-          </LinearGradient>
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color="black" />
+            </TouchableOpacity>
+            <Text className="text-[18px] font-[PoppinsSemiBold] text-black">
+              Extend Warranty
+            </Text>
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="close-sharp" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
 
-          <View className="flex flex-col w-full px-8 mt-8">
+        <ScrollView
+          className={`flex-1 ${isSmallScreen ? "mt-5" : "mt-8"} w-full`}
+        >
+          <View className="flex flex-col w-full px-8 mt-2">
             <Image
               source={require("@/app/assets/images/warranty-logo.png")}
               className="h-16 self-center"
@@ -123,28 +122,27 @@ const ExtendWarrantyScreen = () => {
                 Enter your pin code to check the GoWarranty service
                 availability.
               </Text>
-
-              <View className="flex-row mt-4 mb-1 gap-4">
-                <TextInput
-                  value={pinCode}
-                  onChangeText={setPinCode}
-                  placeholder="Enter a PIN code"
-                  keyboardType="number-pad"
-                  maxLength={6}
-                  className="flex-[1.5] px-4 py-4 bg-white font-[PoppinsSemiBold] rounded-[2px] border-[1.5px] border-black"
-                  accessibilityLabel="PIN code input"
-                />
-                <TouchableOpacity  
-                  className="px-8 flex-1 py-4 bg-stone-950 rounded-[2px]"
-                >
-                  <Text className="text-white text-[14px] text-center font-[PoppinsSemiBold]">
-                    Check
-                  </Text>
-                </TouchableOpacity>
+             
+              <View >
+                <KeyboardAvoidingView className="flex-row mt-4 mb-1 gap-4">
+                  <TextInput
+                    value={pinCode}
+                    onChangeText={setPinCode}
+                    placeholder="Enter a PIN code"
+                    keyboardType="number-pad"
+                    maxLength={6}
+                    className="flex-[1.5] px-4 py-4 bg-white font-[PoppinsSemiBold] rounded-[2px] border-[1.5px] border-black"
+                    accessibilityLabel="PIN code input"
+                  />
+                  <TouchableOpacity className="px-8 flex-1 py-4 bg-stone-950 rounded-[2px]">
+                    <Text className="text-white text-[14px] text-center font-[PoppinsSemiBold]">
+                      Check
+                    </Text>
+                  </TouchableOpacity>
+                </KeyboardAvoidingView>
               </View>
             </View>
 
-            {/* Category Dropdown */}
             <View className="mt-4 mb-1">
               <Text className="text-[13px] font-[PoppinsSemiBold] mb-1">
                 Select a category
@@ -153,21 +151,20 @@ const ExtendWarrantyScreen = () => {
                 <Dropdown
                   data={categories}
                   value={selectedCategory}
-                  onChange={item => setSelectedCategory(item.id)}
+                  onChange={(item) => setSelectedCategory(item.id)}
                   labelField="label"
                   valueField="id"
-                  placeholder="Select category"
+                  placeholder="e.g Laptop"
                   style={{
                     paddingHorizontal: 16,
                     paddingVertical: 14,
-                    backgroundColor: 'white',
+                    backgroundColor: "white",
                   }}
                   accessibilityLabel="Select category"
                 />
               </View>
             </View>
 
-            {/* Device Dropdown */}
             <View className="mt-4 mb-1">
               <Text className="text-[13px] font-[PoppinsSemiBold] mb-1">
                 Select your device
@@ -176,21 +173,20 @@ const ExtendWarrantyScreen = () => {
                 <Dropdown
                   data={devices}
                   value={selectedDevice}
-                  onChange={item => setSelectedDevice(item.id)}
+                  onChange={(item) => setSelectedDevice(item.id)}
                   labelField="name"
                   valueField="id"
                   placeholder="Select device"
                   style={{
                     paddingHorizontal: 16,
                     paddingVertical: 14,
-                    backgroundColor: 'white',
+                    backgroundColor: "white",
                   }}
                   accessibilityLabel="Select device"
                 />
               </View>
             </View>
 
-            {/* Price Range Dropdown */}
             <View className="mt-4 mb-1">
               <Text className="text-[13px] font-[PoppinsSemiBold] mb-1">
                 Select a price range
@@ -199,22 +195,21 @@ const ExtendWarrantyScreen = () => {
                 <Dropdown
                   data={priceRanges}
                   value={selectedPriceRange}
-                  onChange={item => setSelectedPriceRange(item.id)}
+                  onChange={(item) => setSelectedPriceRange(item.id)}
                   labelField="range"
                   valueField="id"
                   placeholder="Select price range"
                   style={{
                     paddingHorizontal: 16,
                     paddingVertical: 14,
-                    backgroundColor: 'white',
-                    borderColor: 'black',
+                    backgroundColor: "white",
+                    borderColor: "black",
                   }}
                   accessibilityLabel="Select price range"
                 />
               </View>
             </View>
 
-            {/* Plan Duration Dropdown */}
             <View className="mt-4 mb-1">
               <Text className="text-[13px] font-[PoppinsSemiBold] mb-1">
                 Plan duration
@@ -223,32 +218,40 @@ const ExtendWarrantyScreen = () => {
                 <Dropdown
                   data={planDurations}
                   value={selectedPlanDuration}
-                  onChange={item => setSelectedPlanDuration(item.id)}
+                  onChange={(item) => setSelectedPlanDuration(item.id)}
                   labelField="duration"
                   valueField="id"
                   placeholder="Select plan duration"
                   style={{
                     paddingHorizontal: 16,
                     paddingVertical: 14,
-                    backgroundColor: 'white',
+                    backgroundColor: "white",
                   }}
                   accessibilityLabel="Select plan duration"
                 />
               </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
 
-      {/* Continue Button */}
-      <TouchableOpacity
-        onPress={() => router.navigate("/screens/ExtendWarranty/GoWarrantyFeatures")}
-        className="flex bg-stone-950 py-4 mx-8 mb-6 border-[1.5px] items-center"
+      <View
+        className={`flex px-8 ${
+          isSmallScreen ? "mt-3 mb-5" : "mt-5 mb-5"
+        } flex-row w-full`}
       >
-        <Text className="text-white text-[13px] font-[PoppinsSemiBold]">
-          Continue
-        </Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            isFormValid && router.navigate("/screens/ExtendWarranty/GoWarrantyFeatures")
+          }
+          className={`py-4 flex-1 bg-black rounded-[2px] border-[1.5px] ${!isFormValid ? 'opacity-50' : ''}`}
+          disabled={!isFormValid}
+        >
+          <Text className={`text-white text-center text-[13px] font-[PoppinsSemiBold] ${!isFormValid ? 'text-gray-900' : ''}`}>
+            Continue
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

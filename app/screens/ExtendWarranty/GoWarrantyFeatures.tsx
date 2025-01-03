@@ -1,18 +1,12 @@
-import * as React from "react";
-import { View, Image, Text, TouchableOpacity, ScrollView, Pressable } from "react-native";
-import { Ionicons } from "@expo/vector-icons"; // Import Ionicons
-import { LinearGradient } from "expo-linear-gradient"; // Import LinearGradient
+import React from "react";
+import { View, Image, Text, TouchableOpacity, ScrollView, Pressable, Dimensions } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-interface PriceProps {
-  amount: number;
-  suffix: string;
-  onPress: () => void;
-}
-
-const PriceSection: React.FC<PriceProps> = ({ amount, suffix, onPress }) => (
+const PriceSection: React.FC<{ amount: number; suffix: string }> = ({ amount, suffix }) => (
   <Pressable
-    onPress={onPress}
     accessible={true}
     accessibilityLabel={`Price ${amount} ${suffix}`}
     accessibilityRole="button"
@@ -27,8 +21,20 @@ const PriceSection: React.FC<PriceProps> = ({ amount, suffix, onPress }) => (
   </Pressable>
 );
 
+const FeatureItem: React.FC<{ text: string }> = ({ text }) => (
+  <View className="flex mt-1 px-2 mb-2 flex-row items-start">
+    <Text className="text-[14px] leading-tight text-black">{"\u25A0"}</Text>
+    <Text className="text-[14px] font-[PoppinsMedium] leading-tight text-black ml-2 pr-6">
+      {text}
+    </Text>
+  </View>
+);
+
 const GoWarrantyFeatures: React.FC = () => {
   const router = useRouter();
+  const { height } = Dimensions.get("window");
+
+  const isSmallScreen = height < 850;
 
   const features = [
     "Extends your manufacturer's warranty to make your air conditioner last longer.",
@@ -42,49 +48,34 @@ const GoWarrantyFeatures: React.FC = () => {
     router.navigate("/screens/ExtendWarranty/OrderSummary");
   };
 
-  const handlePricePress = React.useCallback(() => {
-    // Handle price section press
-  }, []);
-
   return (
-    <View className="flex overflow-hidden flex-col h-full w-full bg-[#EDEDED]">
-      {/* Header with Linear Gradient */}
+    <SafeAreaView className="flex overflow-hidden flex-col h-full w-full bg-[#EDEDED]">
       <LinearGradient
         colors={["#8FFF00", "#00F0FF"]}
         start={{ x: 0.5, y: 0.92 }}
         className="py-2 border-b-2"
       >
-        <View className="flex flex-row justify-between items-center px-8 py-6 mt-2">
-          {/* Back Button */}
-          <TouchableOpacity onPress={() => router.dismiss()}>
+        <View
+          className={`flex flex-row justify-between items-center px-8 ${
+            isSmallScreen ? "py-4 mt-2" : "py-6 mt-2"
+          }`}
+        >
+          <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
           <Text className="text-[18px] text-center font-[PoppinsSemiBold] text-black">
             GoWarranty Features
           </Text>
-          {/* Menu Button */}
-          <TouchableOpacity onPress={() => router.replace("/screens/MainDashboard")}>
+          <TouchableOpacity onPress={() => router.dismissTo("/screens/ProductWarrantyDetails")}>
             <Ionicons name="close-sharp" size={24} color="black" />
           </TouchableOpacity>
         </View>
       </LinearGradient>
 
-      {/* Scrollable Main Content */}
-      <ScrollView className="flex-1 px-8 mt-8 w-full">
-        {/* Feature list with square bullets aligned to the left */}
+      <ScrollView className={`flex-1 px-8 ${isSmallScreen ? "mt-5" : "mt-8"} w-full`}>
         <View className="space-y-2">
           {features.map((feature, index) => (
-            <View
-              key={index}
-              className="flex mt-1 px-2 mb-2 flex-row items-start"
-            >
-              <Text className="text-[14px] leading-tight text-black">
-                {"\u25A0"}
-              </Text>
-              <Text className="text-[14px] font-[PoppinsMedium] leading-tight text-black ml-2 pr-6">
-                {feature}
-              </Text>
-            </View>
+            <FeatureItem key={index} text={feature} />
           ))}
         </View>
 
@@ -92,39 +83,28 @@ const GoWarrantyFeatures: React.FC = () => {
           source={require("@/app/assets/images/go-warranty-features.png")}
           style={{
             width: "90%",
-            height: "auto",
-            aspectRatio: 1, // Ensures the image maintains its aspect ratio
+            aspectRatio: "1",
+            height: "48%",
             alignSelf: "center",
-            marginVertical: 32, // Adds consistent spacing above and below
+            marginVertical: 32,
           }}
           accessible={true}
           accessibilityLabel="Warranty illustration"
           resizeMode="contain"
         />
 
-        <View
-          className="self-center mt-2 text-center text-stone-950"
-          accessible={true}
-          accessibilityRole="text"
-        >
-          <Text className="text-center text-[12px] px-14 font-[PoppinsMedium]">
-            The plan only covers Laptop purchased on or after 29-Dec-2019
-          </Text>
-        </View>
+        <Text className="text-center text-[12px] px-14 font-[PoppinsMedium] mt-2 text-stone-950">
+          The plan only covers Laptop purchased on or after 29-Dec-2019
+        </Text>
       </ScrollView>
 
-      {/* Static Button Section */}
-      <View className="flex px-8 mt-5 mb-6 flex-row w-full" accessible={true}>
-        <PriceSection
-          amount={380}
-          suffix="/ - Only"
-          onPress={handlePricePress}
-        />
+      <View
+        className={`flex px-8 ${isSmallScreen ? "mt-3 mb-5" : "mt-5 mb-5"} flex-row w-full`}
+        accessible={true}
+      >
+        <PriceSection amount={380} suffix="/ - Only" />
         <TouchableOpacity
           onPress={handleBuyNow}
-          accessible={true}
-          accessibilityLabel="Buy now button"
-          accessibilityRole="button"
           className="py-4 flex-1 bg-black"
         >
           <Text className="text-white font-[PoppinsSemiBold] text-center text-[13px]">
@@ -132,7 +112,7 @@ const GoWarrantyFeatures: React.FC = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

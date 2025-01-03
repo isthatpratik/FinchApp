@@ -6,7 +6,7 @@ const CustomCheckBox = ({ title, checked, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
       <Ionicons
-        name={checked ? 'checkbox' : 'square-outline'}
+        name={checked ? 'checkbox' : 'square'}
         size={24}
         color={checked ? '#000' : '#E0E0E0'}
       />

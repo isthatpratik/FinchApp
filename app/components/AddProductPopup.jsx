@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,9 @@ import { BlurView } from 'expo-blur';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
-const Popup = ({ isVisible, onClose }) => {
+const AddProductPopup = ({ isVisible, onClose }) => {
   const router = useRouter();
-
+  
   return (
     <Modal
       transparent={true}
@@ -33,7 +33,7 @@ const Popup = ({ isVisible, onClose }) => {
             <View style={styles.modalContainer}>
               {/* Close Icon */}
               <TouchableOpacity style={styles.closeIcon} onPress={onClose}>
-                <Ionicons name="close-sharp" size={20} />
+                <Ionicons name="close-sharp" size={20}/>
               </TouchableOpacity>
 
               {/* Success Icon */}
@@ -48,14 +48,14 @@ const Popup = ({ isVisible, onClose }) => {
               {/* Title */}
               <Text className='font-[PoppinsSemiBold] text-[18px] mb-4'>Yaay!</Text>
               <Text className='font-[PoppinsMedium] text-[12px] mb-4 text-center px-2 text-[#828282]'>
-                You’ll get notified! The seller will get in touch with you.
+                Congratulations! Your product has been added.
               </Text>
 
               {/* Button */}
               <TouchableOpacity
                 onPress={() => {
                   onClose();
-                  router.dismissTo('/screens/MainDashboard'); // Navigate back to the main dashboard
+                  router.replace('/screens/MainDashboard'); // Navigate back to the main dashboard
                 }}
                 className='py-5 rounded-[2px] w-full items-center bg-black mt-4'
               >
@@ -121,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Popup;
+export default AddProductPopup;

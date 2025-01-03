@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions, Platform, StatusBar as RNStatusBar } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSearchParams } from 'expo-router/build/hooks';
 import PagerView from 'react-native-pager-view'; 
 import Popup from '@/app/components/Popup'; 
-import { StatusBar } from 'expo-status-bar';
 
 type Product = {
   id: string;
@@ -64,10 +63,9 @@ const ProductDetails = () => {
     require('@/app/assets/images/ProductImages/TV 3.png'),
   ];
 
-  const statusBarHeight = Platform.OS === 'android' ? RNStatusBar.currentHeight : 0; // For Android only
 
   return (
-    <View className="flex-1 bg-[#F5F5F5]" style={{ paddingTop: statusBarHeight }}>
+    <View className="flex-1 bg-[#F5F5F5]">
       <ScrollView className="flex-1">
         {/* Header */}
         <View className="flex-row justify-between items-center px-8 py-6 mt-4 mb-2">
@@ -140,7 +138,6 @@ const ProductDetails = () => {
         onClose={() => setPopupVisible(false)} // Close the popup
       />
 
-      <StatusBar translucent={true} style="auto" />
     </View>
   );
 };
